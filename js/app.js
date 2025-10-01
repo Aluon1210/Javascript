@@ -5,11 +5,14 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async function() {
-    // Setup event listeners first
-    setupEventListeners();
+    console.log('DOM Content Loaded - Initializing app...');
     
-    // Load database and wait for it to complete
+    // Load database first and wait for it to complete
     await loadDatabase();
+    console.log('Database loaded, setting up app...');
+    
+    // Setup event listeners after database is loaded
+    setupEventListeners();
     
     // Check user login after database is loaded
     checkUserLogin();
@@ -17,13 +20,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Load page-specific content
     const pathname = window.location.pathname;
-    if (pathname.includes('index.html') || pathname === '/' || pathname.endsWith('/workspace/')) {
-        loadHomePage();
+    console.log('Current pathname:', pathname);
+    
+    if (pathname.includes('index.html') || pathname === '/' || pathname.endsWith('/workspace/') || pathname.endsWith('/')) {
+        console.log('Loading home page...');
+        await loadHomePage();
     } else if (pathname.includes('products.html')) {
+        console.log('Loading products page...');
         loadProductsPage();
     } else if (pathname.includes('admin.html')) {
+        console.log('Loading admin page...');
         loadAdminPage();
     }
+    
+    console.log('App initialization complete!');
 });
 
 // Load database from JSON file
@@ -244,11 +254,130 @@ function closeModal(modalId) {
 }
 
 function showUserMenu() {
-    // Simple implementation - could be expanded
-    const menu = confirm('Bạn muốn đăng xuất?');
-    if (menu) {
-        logout();
+    // Create dropdown menu
+    const existingMenu = document.querySelector('.user-dropdown');
+    if (existingMenu) {
+        existingMenu.remove();
+        return;
     }
+    
+    const dropdown = document.createElement('div');
+    dropdown.className = 'user-dropdown';
+    dropdown.innerHTML = `
+        <div class="user-dropdown-content">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <div>
+                    <strong>${currentUser.name}</strong>
+                    <small>${currentUser.email}</small>
+                </div>
+            </div>
+            <hr>
+            <a href="#" onclick="viewProfile()">
+                <i class="fas fa-user"></i> Thông tin cá nhân
+            </a>
+            <a href="#" onclick="viewOrders()">
+                <i class="fas fa-shopping-bag"></i> Đơn hàng của tôi
+            </a>
+            ${currentUser.role === 'admin' ? '<a href="admin.html"><i class="fas fa-cog"></i> Quản trị</a>' : ''}
+            <hr>
+            <a href="#" onclick="logout()" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+        </div>
+    `;
+    
+    // Add styles
+    dropdown.style.cssText = `
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        z-index: 1000;
+        min-width: 250px;
+        animation: dropdownSlide 0.3s ease;
+    `;
+    
+    // Add dropdown styles if not exists
+    if (!document.getElementById('dropdown-styles')) {
+        const style = document.createElement('style');
+        style.id = 'dropdown-styles';
+        style.textContent = `
+            @keyframes dropdownSlide {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .user-dropdown-content {
+                padding: 1rem;
+            }
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            .user-info i {
+                font-size: 2rem;
+                color: #667eea;
+            }
+            .user-info strong {
+                display: block;
+                color: #333;
+            }
+            .user-info small {
+                color: #666;
+                font-size: 0.8rem;
+            }
+            .user-dropdown hr {
+                border: none;
+                border-top: 1px solid #eee;
+                margin: 0.8rem 0;
+            }
+            .user-dropdown a {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.6rem 0;
+                color: #333;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+            .user-dropdown a:hover {
+                color: #667eea;
+            }
+            .user-dropdown .logout-btn:hover {
+                color: #dc3545;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Position relative to user profile button
+    const userProfile = document.getElementById('userProfile');
+    userProfile.style.position = 'relative';
+    userProfile.appendChild(dropdown);
+    
+    // Close dropdown when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', function closeDropdown(e) {
+            if (!userProfile.contains(e.target)) {
+                dropdown.remove();
+                document.removeEventListener('click', closeDropdown);
+            }
+        });
+    }, 100);
+}
+
+function viewProfile() {
+    showNotification('Tính năng xem thông tin cá nhân đang được phát triển!', 'info');
+    document.querySelector('.user-dropdown')?.remove();
+}
+
+function viewOrders() {
+    showNotification('Tính năng xem đơn hàng đang được phát triển!', 'info');
+    document.querySelector('.user-dropdown')?.remove();
 }
 
 // Home page functions
@@ -397,7 +526,9 @@ function searchProducts() {
 function addToCart(productId) {
     if (!currentUser) {
         showNotification('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!', 'error');
-        showLoginModal();
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
         return;
     }
     

@@ -29,7 +29,7 @@
                         <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="user-actions">
-                        <button id="loginBtn" onclick="showLoginModal()"><i class="fas fa-user"></i> Đăng nhập</button>
+                        <button id="loginBtn" onclick="window.location.href='login.html'"><i class="fas fa-user"></i> Đăng nhập</button>
                         <button id="userProfile" class="hidden" onclick="showUserMenu()"><i class="fas fa-user-circle"></i> <span id="userName"></span></button>
                         <button onclick="showCart()"><i class="fas fa-shopping-cart"></i> Giỏ hàng (<span id="cartCount">0</span>)</button>
                     </div>
@@ -96,36 +96,6 @@
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('loginModal')">&times;</span>
-            <h2>Đăng nhập</h2>
-            <form id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email" required>
-                <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
-                <button type="submit">Đăng nhập</button>
-            </form>
-            <p>Chưa có tài khoản? <a href="#" onclick="showRegisterModal()">Đăng ký ngay</a></p>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('registerModal')">&times;</span>
-            <h2>Đăng ký</h2>
-            <form id="registerForm">
-                <input type="text" id="registerName" placeholder="Họ tên" required>
-                <input type="email" id="registerEmail" placeholder="Email" required>
-                <input type="tel" id="registerPhone" placeholder="Số điện thoại" required>
-                <input type="text" id="registerAddress" placeholder="Địa chỉ" required>
-                <input type="password" id="registerPassword" placeholder="Mật khẩu" required>
-                <button type="submit">Đăng ký</button>
-            </form>
-            <p>Đã có tài khoản? <a href="#" onclick="showLoginModal()">Đăng nhập</a></p>
-        </div>
-    </div>
 
     <!-- Cart Modal -->
     <div id="cartModal" class="modal">
