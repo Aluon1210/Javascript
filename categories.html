@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susan Shop - Cửa hàng thời trang</title>
+    <title>Danh mục - Susan Shop</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -13,13 +13,13 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1><i class="fas fa-store"></i> Susan Shop</h1>
+                    <h1><a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-store"></i> Susan Shop</a></h1>
                 </div>
                 <nav class="nav">
                     <ul>
                         <li><a href="index.html">Trang chủ</a></li>
                         <li><a href="products.html">Sản phẩm</a></li>
-                        <li><a href="categories.html">Danh mục</a></li>
+                        <li><a href="categories.html" class="active">Danh mục</a></li>
                         <li><a href="contact.html">Liên hệ</a></li>
                     </ul>
                 </nav>
@@ -38,31 +38,23 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Chào mừng đến với Susan Shop</h2>
-            <p>Khám phá bộ sưu tập thời trang mới nhất</p>
-            <button class="cta-btn" onclick="window.location.href='products.html'">Mua sắm ngay</button>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Trang chủ</a> > <span>Danh mục</span>
+            </nav>
         </div>
-    </section>
+    </div>
 
     <!-- Categories Section -->
-    <section class="categories-section">
+    <section class="categories-page">
         <div class="container">
-            <h2>Danh mục sản phẩm</h2>
-            <div class="categories-grid" id="categoriesGrid">
+            <h1>Danh mục sản phẩm</h1>
+            <p>Khám phá các danh mục sản phẩm đa dạng tại Susan Shop</p>
+            
+            <div class="categories-grid" id="allCategories">
                 <!-- Categories will be loaded here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>Sản phẩm nổi bật</h2>
-            <div class="products-grid" id="featuredProducts">
-                <!-- Featured products will be loaded here -->
             </div>
         </div>
     </section>
@@ -96,7 +88,7 @@
         </div>
     </footer>
 
-    <!-- Login Modal -->
+    <!-- Modals -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('loginModal')">&times;</span>
@@ -110,7 +102,6 @@
         </div>
     </div>
 
-    <!-- Register Modal -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('registerModal')">&times;</span>
@@ -127,19 +118,50 @@
         </div>
     </div>
 
-    <!-- Cart Modal -->
     <div id="cartModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('cartModal')">&times;</span>
             <h2>Giỏ hàng</h2>
             <div id="cartItems"></div>
             <div class="cart-total">
-                <h3>Tổng cộng: <span id="cartTotal">0</span> VND</h3>
+                <h3>Tổng cộng: <span id="cartTotal">0</span></h3>
             </div>
             <button id="checkoutBtn" onclick="checkout()">Thanh toán</button>
         </div>
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        // Load categories when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllCategories();
+        });
+
+        async function loadAllCategories() {
+            while (!database) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            const allCategories = document.getElementById('allCategories');
+            if (!allCategories) return;
+            
+            allCategories.innerHTML = database.categories.map(category => {
+                const productCount = database.products.filter(p => p.cate_id === category.id).length;
+                const parentCategory = database.categories.find(c => c.id === category.parent_id);
+                const isMainCategory = !parentCategory;
+                
+                return `
+                    <div class="category-card ${isMainCategory ? 'main-category' : 'sub-category'}" onclick="viewCategory(${category.id})">
+                        <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(category.name)}" alt="${category.name}">
+                        <div class="category-info">
+                            <h3>${category.name}</h3>
+                            ${parentCategory ? `<p class="parent-category">Thuộc: ${parentCategory.name}</p>` : ''}
+                            <p class="product-count">${productCount} sản phẩm</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
 </body>
 </html>

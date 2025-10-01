@@ -1,0 +1,315 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Thời trang nữ",
+      "parent_id": null
+    },
+    {
+      "id": 2,
+      "name": "Thời trang nam",
+      "parent_id": null
+    },
+    {
+      "id": 3,
+      "name": "Phụ kiện",
+      "parent_id": null
+    },
+    {
+      "id": 4,
+      "name": "Áo sơ mi nữ",
+      "parent_id": 1
+    },
+    {
+      "id": 5,
+      "name": "Váy đầm",
+      "parent_id": 1
+    },
+    {
+      "id": 6,
+      "name": "Áo thun nam",
+      "parent_id": 2
+    },
+    {
+      "id": 7,
+      "name": "Quần jean nam",
+      "parent_id": 2
+    },
+    {
+      "id": 8,
+      "name": "Túi xách",
+      "parent_id": 3
+    },
+    {
+      "id": 9,
+      "name": "Giày dép",
+      "parent_id": 3
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Áo sơ mi trắng công sở",
+      "cate_id": 4,
+      "detail": "Áo sơ mi trắng thanh lịch, phù hợp cho môi trường công sở. Chất liệu cotton cao cấp, thoáng mát.",
+      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang"
+    },
+    {
+      "id": 2,
+      "name": "Váy đầm hoa nhí",
+      "cate_id": 5,
+      "detail": "Váy đầm hoa nhí xinh xắn, phong cách nữ tính. Chất liệu voan mềm mại, thoải mái khi mặc.",
+      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa"
+    },
+    {
+      "id": 3,
+      "name": "Áo thun polo nam",
+      "cate_id": 6,
+      "detail": "Áo thun polo nam basic, phong cách trẻ trung. Chất liệu cotton pha, co giãn tốt.",
+      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=Ao+Thun+Polo"
+    },
+    {
+      "id": 4,
+      "name": "Quần jean skinny nam",
+      "cate_id": 7,
+      "detail": "Quần jean skinny nam form chuẩn, phong cách hiện đại. Chất liệu denim cao cấp, bền đẹp.",
+      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=Quan+Jean+Nam"
+    },
+    {
+      "id": 5,
+      "name": "Túi xách da nữ",
+      "cate_id": 8,
+      "detail": "Túi xách da nữ cao cấp, thiết kế sang trọng. Da thật 100%, đường may tỉ mỉ.",
+      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Tui+Xach+Da"
+    },
+    {
+      "id": 6,
+      "name": "Giày sneaker unisex",
+      "cate_id": 9,
+      "detail": "Giày sneaker unisex phong cách thể thao. Đế cao su êm ái, phù hợp mọi hoạt động.",
+      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=Giay+Sneaker"
+    },
+    {
+      "id": 7,
+      "name": "Áo sơ mi kẻ sọc",
+      "cate_id": 4,
+      "detail": "Áo sơ mi kẻ sọc thời trang, phong cách trẻ trung. Chất liệu cotton mềm mại.",
+      "image": "https://via.placeholder.com/300x300/00d2d3/ffffff?text=Ao+Ke+Soc"
+    },
+    {
+      "id": 8,
+      "name": "Váy maxi dài",
+      "cate_id": 5,
+      "detail": "Váy maxi dài thanh lịch, phù hợp dự tiệc. Chất liệu lụa cao cấp, draping đẹp.",
+      "image": "https://via.placeholder.com/300x300/ff9ff3/ffffff?text=Vay+Maxi"
+    }
+  ],
+  "product_variants": [
+    {
+      "id": 1,
+      "product_id": 1,
+      "variant_name": "Size S - Trắng",
+      "price": 299000,
+      "quantity": 50,
+      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=S+Trang"
+    },
+    {
+      "id": 2,
+      "product_id": 1,
+      "variant_name": "Size M - Trắng",
+      "price": 299000,
+      "quantity": 30,
+      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=M+Trang"
+    },
+    {
+      "id": 3,
+      "product_id": 1,
+      "variant_name": "Size L - Trắng",
+      "price": 299000,
+      "quantity": 20,
+      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=L+Trang"
+    },
+    {
+      "id": 4,
+      "product_id": 2,
+      "variant_name": "Size S - Hoa nhí xanh",
+      "price": 450000,
+      "quantity": 25,
+      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=S+Xanh"
+    },
+    {
+      "id": 5,
+      "product_id": 2,
+      "variant_name": "Size M - Hoa nhí xanh",
+      "price": 450000,
+      "quantity": 35,
+      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=M+Xanh"
+    },
+    {
+      "id": 6,
+      "product_id": 3,
+      "variant_name": "Size M - Xanh navy",
+      "price": 199000,
+      "quantity": 40,
+      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=M+Navy"
+    },
+    {
+      "id": 7,
+      "product_id": 3,
+      "variant_name": "Size L - Xanh navy",
+      "price": 199000,
+      "quantity": 30,
+      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=L+Navy"
+    },
+    {
+      "id": 8,
+      "product_id": 4,
+      "variant_name": "Size 30 - Xanh đen",
+      "price": 599000,
+      "quantity": 15,
+      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=30+Den"
+    },
+    {
+      "id": 9,
+      "product_id": 4,
+      "variant_name": "Size 32 - Xanh đen",
+      "price": 599000,
+      "quantity": 20,
+      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=32+Den"
+    },
+    {
+      "id": 10,
+      "product_id": 5,
+      "variant_name": "Màu đen",
+      "price": 899000,
+      "quantity": 10,
+      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Den"
+    },
+    {
+      "id": 11,
+      "product_id": 5,
+      "variant_name": "Màu nâu",
+      "price": 899000,
+      "quantity": 8,
+      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Nau"
+    },
+    {
+      "id": 12,
+      "product_id": 6,
+      "variant_name": "Size 38 - Trắng",
+      "price": 799000,
+      "quantity": 25,
+      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=38+Trang"
+    },
+    {
+      "id": 13,
+      "product_id": 6,
+      "variant_name": "Size 39 - Trắng",
+      "price": 799000,
+      "quantity": 30,
+      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=39+Trang"
+    },
+    {
+      "id": 14,
+      "product_id": 6,
+      "variant_name": "Size 40 - Đen",
+      "price": 799000,
+      "quantity": 20,
+      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=40+Den"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Nguyễn Văn Admin",
+      "email": "admin@susanshop.com",
+      "phone": "0123456789",
+      "address": "123 Đường ABC, TP.HCM",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Trần Thị Lan",
+      "email": "lan@gmail.com",
+      "phone": "0987654321",
+      "address": "456 Đường XYZ, Hà Nội",
+      "password": "user123",
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "name": "Lê Văn Nam",
+      "email": "nam@gmail.com",
+      "phone": "0912345678",
+      "address": "789 Đường DEF, Đà Nẵng",
+      "password": "user456",
+      "role": "user"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "created_date": "2025-01-01T10:30:00Z",
+      "status": "completed",
+      "total_amount": 748000
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "created_date": "2025-01-02T14:15:00Z",
+      "status": "processing",
+      "total_amount": 1398000
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "created_date": "2025-01-03T09:45:00Z",
+      "status": "pending",
+      "total_amount": 299000
+    }
+  ],
+  "order_details": [
+    {
+      "id": 1,
+      "order_id": 1,
+      "product_id": 1,
+      "variant_id": 1,
+      "quantity": 1,
+      "unit_price": 299000
+    },
+    {
+      "id": 2,
+      "order_id": 1,
+      "product_id": 2,
+      "variant_id": 4,
+      "quantity": 1,
+      "unit_price": 450000
+    },
+    {
+      "id": 3,
+      "order_id": 2,
+      "product_id": 4,
+      "variant_id": 8,
+      "quantity": 1,
+      "unit_price": 599000
+    },
+    {
+      "id": 4,
+      "order_id": 2,
+      "product_id": 6,
+      "variant_id": 12,
+      "quantity": 1,
+      "unit_price": 799000
+    },
+    {
+      "id": 5,
+      "order_id": 3,
+      "product_id": 1,
+      "variant_id": 2,
+      "quantity": 1,
+      "unit_price": 299000
+    }
+  ]
+}

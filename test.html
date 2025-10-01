@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Susan Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Susan Shop - Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Database Loading</h2>
+        <button onclick="testDatabase()">Test Load Database</button>
+        <div id="dbResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Login</h2>
+        <form id="testLoginForm">
+            <input type="email" id="testEmail" placeholder="Email" value="admin@susanshop.com">
+            <input type="password" id="testPassword" placeholder="Password" value="admin123">
+            <button type="submit">Test Login</button>
+        </form>
+        <div id="loginResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Products Display</h2>
+        <button onclick="testProducts()">Test Load Products</button>
+        <div id="productsResult" class="result"></div>
+    </div>
+
+    <script>
+        let database = null;
+        
+        async function testDatabase() {
+            const result = document.getElementById('dbResult');
+            result.innerHTML = 'Loading database...';
+            
+            try {
+                const response = await fetch('data/database.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                database = await response.json();
+                
+                result.innerHTML = `
+                    <strong>✅ Database loaded successfully!</strong><br>
+                    Categories: ${database.categories?.length || 0}<br>
+                    Products: ${database.products?.length || 0}<br>
+                    Users: ${database.users?.length || 0}<br>
+                    Orders: ${database.orders?.length || 0}
+                `;
+                
+                console.log('Database:', database);
+            } catch (error) {
+                result.innerHTML = `<strong>❌ Error loading database:</strong> ${error.message}`;
+                console.error('Database error:', error);
+            }
+        }
+        
+        function testLogin() {
+            const result = document.getElementById('loginResult');
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!database) {
+                result.innerHTML = '❌ Database not loaded. Please test database first.';
+                return;
+            }
+            
+            const user = database.users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                result.innerHTML = `
+                    <strong>✅ Login successful!</strong><br>
+                    Name: ${user.name}<br>
+                    Role: ${user.role}<br>
+                    Email: ${user.email}
+                `;
+            } else {
+                result.innerHTML = '❌ Login failed. User not found.';
+            }
+        }
+        
+        function testProducts() {
+            const result = document.getElementById('productsResult');
+            
+            if (!database) {
+                result.innerHTML = '❌ Database not loaded. Please test database first.';
+                return;
+            }
+            
+            const products = database.products.slice(0, 3);
+            let html = '<strong>✅ Products loaded:</strong><br>';
+            
+            products.forEach(product => {
+                const variant = database.product_variants.find(v => v.product_id === product.id);
+                const price = variant ? new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(variant.price) : 'N/A';
+                
+                html += `
+                    <div style="margin: 10px 0; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px;">
+                        <strong>${product.name}</strong><br>
+                        Price: ${price}<br>
+                        Category ID: ${product.cate_id}
+                    </div>
+                `;
+            });
+            
+            result.innerHTML = html;
+        }
+        
+        // Setup form event listener
+        document.getElementById('testLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            testLogin();
+        });
+        
+        // Auto-load database on page load
+        window.addEventListener('load', testDatabase);
+    </script>
+</body>
+</html>
