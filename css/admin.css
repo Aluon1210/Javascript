@@ -1,0 +1,484 @@
+/* Admin specific styles */
+.admin-body {
+    background-color: #f4f6f9;
+}
+
+/* Admin Header */
+.admin-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.admin-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header .logo h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-user span {
+    font-size: 0.9rem;
+}
+
+/* Admin Navigation */
+.admin-nav {
+    background: #34495e;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.admin-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+.admin-nav li {
+    flex-shrink: 0;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+    background: #2c3e50;
+    color: white;
+    border-bottom-color: #3498db;
+}
+
+/* Admin Content */
+.admin-content {
+    padding: 2rem 0;
+    min-height: calc(100vh - 140px);
+}
+
+.admin-section {
+    display: none;
+}
+
+.admin-section.active {
+    display: block;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.section-header h2 {
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-card:nth-child(1) .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-card:nth-child(2) .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card:nth-child(3) .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card:nth-child(4) .stat-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-info h3 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+}
+
+.stat-info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Dashboard Charts */
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.chart-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.chart-container h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.recent-orders {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recent-order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.recent-order-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+}
+
+.recent-order-info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.recent-order-amount {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 1.1rem;
+}
+
+/* Admin Tables */
+.admin-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.admin-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: #34495e;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #ecf0f1;
+    vertical-align: middle;
+}
+
+.admin-table tr:hover {
+    background: #f8f9fa;
+}
+
+.admin-table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-processing {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-shipping {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+/* Statistics */
+.statistics-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.stat-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.stat-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.month-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.month-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.month-stat-item h4 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.month-stat-item p {
+    margin: 0;
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.top-products, .vip-customers {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.top-product-item, .vip-customer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.top-product-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 1rem;
+}
+
+.product-info, .customer-info {
+    flex: 1;
+}
+
+.product-info h4, .customer-info h4 {
+    margin: 0 0 0.3rem 0;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.product-info p, .customer-info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.8rem;
+}
+
+.product-sales, .customer-orders {
+    font-weight: bold;
+    color: #3498db;
+}
+
+/* Modal enhancements for admin */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-content textarea {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.modal-content label {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+/* Responsive Design for Admin */
+@media (max-width: 768px) {
+    .admin-header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .admin-nav ul {
+        flex-direction: column;
+    }
+    
+    .admin-nav a {
+        justify-content: center;
+        border-bottom: none;
+        border-right: 3px solid transparent;
+    }
+    
+    .admin-nav a:hover,
+    .admin-nav a.active {
+        border-right-color: #3498db;
+        border-bottom: none;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .statistics-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-table {
+        overflow-x: auto;
+    }
+    
+    .admin-table table {
+        min-width: 600px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 1rem 0;
+    }
+    
+    .stat-card, .chart-container, .stat-section {
+        padding: 1rem;
+    }
+    
+    .modal-content {
+        margin: 5% auto;
+        width: 95%;
+    }
+}
