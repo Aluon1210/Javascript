@@ -4,66 +4,121 @@ let currentUser = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', function() {
-    loadDatabase();
+document.addEventListener('DOMContentLoaded', async function() {
+    // Setup event listeners first
+    setupEventListeners();
+    
+    // Load database and wait for it to complete
+    await loadDatabase();
+    
+    // Check user login after database is loaded
     checkUserLogin();
     updateCartCount();
     
     // Load page-specific content
-    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+    const pathname = window.location.pathname;
+    if (pathname.includes('index.html') || pathname === '/' || pathname.endsWith('/workspace/')) {
         loadHomePage();
-    } else if (window.location.pathname.includes('products.html')) {
+    } else if (pathname.includes('products.html')) {
         loadProductsPage();
-    } else if (window.location.pathname.includes('admin.html')) {
+    } else if (pathname.includes('admin.html')) {
         loadAdminPage();
     }
-    
-    // Setup event listeners
-    setupEventListeners();
 });
 
 // Load database from JSON file
 async function loadDatabase() {
     try {
         const response = await fetch('data/database.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         database = await response.json();
-        console.log('Database loaded successfully');
+        console.log('Database loaded successfully', database);
+        
+        // Validate database structure
+        if (!database.users || !database.products || !database.categories) {
+            throw new Error('Invalid database structure');
+        }
+        
     } catch (error) {
         console.error('Error loading database:', error);
-        // Fallback to empty database structure
+        
+        // Show user-friendly error message
+        showNotification('Không thể tải dữ liệu. Sử dụng dữ liệu mẫu.', 'warning');
+        
+        // Fallback to sample data
         database = {
-            categories: [],
-            products: [],
-            product_variants: [],
-            users: [],
+            categories: [
+                { id: 1, name: "Thời trang nữ", parent_id: null },
+                { id: 2, name: "Thời trang nam", parent_id: null },
+                { id: 3, name: "Phụ kiện", parent_id: null }
+            ],
+            products: [
+                {
+                    id: 1,
+                    name: "Áo sơ mi trắng công sở",
+                    cate_id: 1,
+                    detail: "Áo sơ mi trắng thanh lịch, phù hợp cho môi trường công sở. Chất liệu cotton cao cấp, thoáng mát.",
+                    image: "https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang"
+                },
+                {
+                    id: 2,
+                    name: "Váy đầm hoa nhí",
+                    cate_id: 1,
+                    detail: "Váy đầm hoa nhí xinh xắn, phong cách nữ tính. Chất liệu voan mềm mại, thoải mái khi mặc.",
+                    image: "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa"
+                }
+            ],
+            product_variants: [
+                { id: 1, product_id: 1, variant_name: "Size S - Trắng", price: 299000, quantity: 50, image: "https://via.placeholder.com/300x300/667eea/ffffff?text=S+Trang" },
+                { id: 2, product_id: 2, variant_name: "Size M - Hoa nhí", price: 450000, quantity: 30, image: "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=M+Hoa" }
+            ],
+            users: [
+                { id: 1, name: "Admin", email: "admin@susanshop.com", phone: "0123456789", address: "123 ABC", password: "admin123", role: "admin" },
+                { id: 2, name: "User Test", email: "user@test.com", phone: "0987654321", address: "456 XYZ", password: "user123", role: "user" }
+            ],
             orders: [],
             order_details: []
         };
+        
+        console.log('Using fallback database:', database);
     }
 }
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
     // Login form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
+        console.log('Login form found, adding event listener');
         loginForm.addEventListener('submit', handleLogin);
+    } else {
+        console.log('Login form not found');
     }
     
     // Register form
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
+        console.log('Register form found, adding event listener');
         registerForm.addEventListener('submit', handleRegister);
+    } else {
+        console.log('Register form not found');
     }
     
     // Search functionality
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
+        console.log('Search input found, adding event listener');
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchProducts();
             }
         });
+    } else {
+        console.log('Search input not found');
     }
 }
 
@@ -74,7 +129,16 @@ function handleLogin(e) {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
+    console.log('Attempting login with:', email, password);
+    console.log('Database users:', database ? database.users : 'Database not loaded');
+    
+    if (!database) {
+        showNotification('Hệ thống đang tải, vui lòng thử lại!', 'error');
+        return;
+    }
+    
     const user = database.users.find(u => u.email === email && u.password === password);
+    console.log('Found user:', user);
     
     if (user) {
         currentUser = user;
@@ -85,7 +149,9 @@ function handleLogin(e) {
         
         // Redirect to admin if admin user
         if (user.role === 'admin') {
-            window.location.href = 'admin.html';
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 1000);
         }
     } else {
         showNotification('Email hoặc mật khẩu không đúng!', 'error');
@@ -186,7 +252,12 @@ function showUserMenu() {
 }
 
 // Home page functions
-function loadHomePage() {
+async function loadHomePage() {
+    // Wait for database to be loaded if it's not ready yet
+    while (!database) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
     loadCategories();
     loadFeaturedProducts();
 }
@@ -208,10 +279,14 @@ function loadCategories() {
 
 function loadFeaturedProducts() {
     const featuredProducts = document.getElementById('featuredProducts');
-    if (!featuredProducts || !database) return;
+    if (!featuredProducts || !database) {
+        console.log('Featured products container not found or database not loaded');
+        return;
+    }
     
     // Get first 6 products as featured
     const products = database.products.slice(0, 6);
+    console.log('Loading featured products:', products.length);
     
     featuredProducts.innerHTML = products.map(product => {
         const variant = database.product_variants.find(v => v.product_id === product.id);
@@ -304,10 +379,17 @@ function displayProducts(products) {
 
 function searchProducts() {
     const searchInput = document.getElementById('searchInput');
+    if (!searchInput) {
+        console.error('Search input not found');
+        return;
+    }
+    
     const query = searchInput.value.trim();
     
     if (query) {
         window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+    } else {
+        showNotification('Vui lòng nhập từ khóa tìm kiếm!', 'warning');
     }
 }
 
@@ -510,8 +592,23 @@ function showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
+    
+    const iconMap = {
+        'success': 'check-circle',
+        'error': 'exclamation-circle',
+        'warning': 'exclamation-triangle',
+        'info': 'info-circle'
+    };
+    
+    const colorMap = {
+        'success': '#28a745',
+        'error': '#dc3545',
+        'warning': '#ffc107',
+        'info': '#17a2b8'
+    };
+    
     notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <i class="fas fa-${iconMap[type] || 'info-circle'}"></i>
         <span>${message}</span>
     `;
     
@@ -520,8 +617,8 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
-        color: white;
+        background: ${colorMap[type] || '#17a2b8'};
+        color: ${type === 'warning' ? '#212529' : 'white'};
         padding: 15px 20px;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -530,25 +627,30 @@ function showNotification(message, type = 'info') {
         align-items: center;
         gap: 10px;
         animation: slideIn 0.3s ease;
+        max-width: 400px;
+        word-wrap: break-word;
     `;
     
-    // Add animation styles
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
+    // Add animation styles if not already added
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
     
     document.body.appendChild(notification);
     
-    // Auto remove after 3 seconds
+    // Auto remove after 4 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => {
@@ -556,7 +658,7 @@ function showNotification(message, type = 'info') {
                 notification.parentNode.removeChild(notification);
             }
         }, 300);
-    }, 3000);
+    }, 4000);
 }
 
 function saveDatabase() {
