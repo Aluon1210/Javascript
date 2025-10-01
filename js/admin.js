@@ -196,17 +196,27 @@ function loadProducts() {
             <tr>
                 <td>${product.id}</td>
                 <td><img src="${product.image}" alt="${product.name}"></td>
-                <td>${product.name}</td>
+                <td>
+                    <strong>${product.name}</strong><br>
+                    <small class="text-muted">${product.detail.substring(0, 50)}...</small>
+                </td>
                 <td>${categoryName}</td>
                 <td>${price}</td>
-                <td>${stock}</td>
+                <td>
+                    <span class="stock-badge ${stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                        ${stock} sản phẩm
+                    </span>
+                </td>
                 <td>
                     <div class="action-buttons">
-                        <button onclick="editProduct(${product.id})" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Sửa
+                        <button onclick="showProductVariants(${product.id})" class="btn btn-info btn-sm" title="Quản lý phiên bản">
+                            <i class="fas fa-list"></i>
                         </button>
-                        <button onclick="deleteProduct(${product.id})" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i> Xóa
+                        <button onclick="editProduct(${product.id})" class="btn btn-warning btn-sm" title="Sửa sản phẩm">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteProduct(${product.id})" class="btn btn-danger btn-sm" title="Xóa sản phẩm">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </td>
@@ -216,7 +226,51 @@ function loadProducts() {
 }
 
 function showAddProductModal() {
+    loadCategoriesForForms();
     document.getElementById('addProductModal').style.display = 'block';
+}
+
+function showProductVariants(productId) {
+    const product = database.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    document.getElementById('variantsProductName').textContent = product.name;
+    document.getElementById('variantProductId').value = productId;
+    
+    loadProductVariants(productId);
+    document.getElementById('productVariantsModal').style.display = 'block';
+}
+
+function loadProductVariants(productId) {
+    const variantsList = document.getElementById('variantsList');
+    const variants = database.product_variants.filter(v => v.product_id === productId);
+    
+    if (variants.length === 0) {
+        variantsList.innerHTML = '<p class="text-center text-muted">Chưa có phiên bản nào</p>';
+        return;
+    }
+    
+    variantsList.innerHTML = variants.map(variant => `
+        <div class="variant-item">
+            <img src="${variant.image || 'https://via.placeholder.com/60x60'}" alt="${variant.variant_name}">
+            <div class="variant-info">
+                <h4>${variant.variant_name}</h4>
+                <p>Giá: ${formatPrice(variant.price)} | Tồn kho: ${variant.quantity}</p>
+            </div>
+            <div class="variant-actions">
+                <button onclick="editVariant(${variant.id})" class="btn-icon btn-warning" title="Sửa">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteVariant(${variant.id})" class="btn-icon btn-danger" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showAddVariantModal() {
+    document.getElementById('addVariantModal').style.display = 'block';
 }
 
 // Customers management
@@ -228,22 +282,34 @@ function loadCustomers() {
     
     customersTable.innerHTML = customers.map(customer => {
         const orderCount = database.orders.filter(o => o.user_id === customer.id).length;
+        const totalSpent = database.orders
+            .filter(o => o.user_id === customer.id)
+            .reduce((sum, order) => sum + order.total_amount, 0);
         
         return `
             <tr>
                 <td>${customer.id}</td>
-                <td>${customer.name}</td>
+                <td>
+                    <strong>${customer.name}</strong><br>
+                    <span class="user-role ${customer.role}">${customer.role === 'admin' ? 'Admin' : 'Khách hàng'}</span>
+                </td>
                 <td>${customer.email}</td>
-                <td>${customer.phone}</td>
-                <td>${customer.address}</td>
-                <td>${orderCount}</td>
+                <td>${customer.phone || 'Chưa có'}</td>
+                <td>${customer.address || 'Chưa có'}</td>
+                <td>
+                    <strong>${orderCount}</strong> đơn<br>
+                    <small class="text-muted">${formatPrice(totalSpent)}</small>
+                </td>
                 <td>
                     <div class="action-buttons">
-                        <button onclick="viewCustomerDetails(${customer.id})" class="btn btn-primary btn-sm">
-                            <i class="fas fa-eye"></i> Xem
+                        <button onclick="viewCustomerDetails(${customer.id})" class="btn btn-info btn-sm" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
                         </button>
-                        <button onclick="deleteCustomer(${customer.id})" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i> Xóa
+                        <button onclick="editCustomer(${customer.id})" class="btn btn-warning btn-sm" title="Sửa thông tin">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteCustomer(${customer.id})" class="btn btn-danger btn-sm" title="Xóa khách hàng">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </td>
@@ -405,6 +471,24 @@ function setupAdminForms() {
         addProductForm.addEventListener('submit', handleAddProduct);
     }
     
+    // Edit Product Form
+    const editProductForm = document.getElementById('editProductForm');
+    if (editProductForm) {
+        editProductForm.addEventListener('submit', handleEditProduct);
+    }
+    
+    // Add Variant Form
+    const addVariantForm = document.getElementById('addVariantForm');
+    if (addVariantForm) {
+        addVariantForm.addEventListener('submit', handleAddVariant);
+    }
+    
+    // Edit User Form
+    const editUserForm = document.getElementById('editUserForm');
+    if (editUserForm) {
+        editUserForm.addEventListener('submit', handleEditUser);
+    }
+    
     // Edit Order Form
     const editOrderForm = document.getElementById('editOrderForm');
     if (editOrderForm) {
@@ -446,10 +530,11 @@ function handleAddProduct(e) {
     const variantName = document.getElementById('variantName').value;
     const price = parseInt(document.getElementById('variantPrice').value);
     const quantity = parseInt(document.getElementById('variantQuantity').value);
+    const variantImage = document.getElementById('variantImage').value || image;
     
     // Add product
     const newProduct = {
-        id: Math.max(...database.products.map(p => p.id)) + 1,
+        id: Math.max(...database.products.map(p => p.id), 0) + 1,
         name: name,
         cate_id: categoryId,
         detail: detail,
@@ -460,12 +545,12 @@ function handleAddProduct(e) {
     
     // Add product variant
     const newVariant = {
-        id: Math.max(...database.product_variants.map(v => v.id)) + 1,
+        id: Math.max(...database.product_variants.map(v => v.id), 0) + 1,
         product_id: newProduct.id,
         variant_name: variantName,
         price: price,
         quantity: quantity,
-        image: image
+        image: variantImage
     };
     
     database.product_variants.push(newVariant);
@@ -477,6 +562,90 @@ function handleAddProduct(e) {
     
     // Reset form
     document.getElementById('addProductForm').reset();
+}
+
+function handleEditProduct(e) {
+    e.preventDefault();
+    
+    const productId = parseInt(document.getElementById('editProductId').value);
+    const name = document.getElementById('editProductName').value;
+    const categoryId = parseInt(document.getElementById('editProductCategory').value);
+    const detail = document.getElementById('editProductDetail').value;
+    const image = document.getElementById('editProductImage').value;
+    
+    const product = database.products.find(p => p.id === productId);
+    if (product) {
+        product.name = name;
+        product.cate_id = categoryId;
+        product.detail = detail;
+        product.image = image;
+        
+        saveDatabase();
+        closeModal('editProductModal');
+        loadProducts();
+        showNotification('Đã cập nhật sản phẩm!', 'success');
+    }
+}
+
+function handleAddVariant(e) {
+    e.preventDefault();
+    
+    const productId = parseInt(document.getElementById('variantProductId').value);
+    const variantName = document.getElementById('newVariantName').value;
+    const price = parseInt(document.getElementById('newVariantPrice').value);
+    const quantity = parseInt(document.getElementById('newVariantQuantity').value);
+    const image = document.getElementById('newVariantImage').value;
+    
+    const newVariant = {
+        id: Math.max(...database.product_variants.map(v => v.id), 0) + 1,
+        product_id: productId,
+        variant_name: variantName,
+        price: price,
+        quantity: quantity,
+        image: image || 'https://via.placeholder.com/300x300'
+    };
+    
+    database.product_variants.push(newVariant);
+    saveDatabase();
+    
+    closeModal('addVariantModal');
+    loadProductVariants(productId);
+    loadProducts(); // Refresh products table
+    showNotification('Đã thêm phiên bản mới!', 'success');
+    
+    // Reset form
+    document.getElementById('addVariantForm').reset();
+}
+
+function handleEditUser(e) {
+    e.preventDefault();
+    
+    const userId = parseInt(document.getElementById('editUserId').value);
+    const name = document.getElementById('editUserName').value;
+    const email = document.getElementById('editUserEmail').value;
+    const phone = document.getElementById('editUserPhone').value;
+    const role = document.getElementById('editUserRole').value;
+    const address = document.getElementById('editUserAddress').value;
+    const password = document.getElementById('editUserPassword').value;
+    
+    const user = database.users.find(u => u.id === userId);
+    if (user) {
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        user.role = role;
+        user.address = address;
+        
+        // Only update password if provided
+        if (password.trim()) {
+            user.password = password;
+        }
+        
+        saveDatabase();
+        closeModal('editUserModal');
+        loadCustomers();
+        showNotification('Đã cập nhật thông tin người dùng!', 'success');
+    }
 }
 
 function handleEditOrder(e) {
@@ -528,17 +697,95 @@ function deleteCategory(categoryId) {
 }
 
 function editProduct(productId) {
-    showNotification('Chức năng sửa sản phẩm đang được phát triển!', 'info');
+    const product = database.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    // Populate form
+    document.getElementById('editProductId').value = product.id;
+    document.getElementById('editProductName').value = product.name;
+    document.getElementById('editProductCategory').value = product.cate_id;
+    document.getElementById('editProductDetail').value = product.detail;
+    document.getElementById('editProductImage').value = product.image;
+    
+    // Load categories for form
+    loadCategoriesForEditForm();
+    
+    document.getElementById('editProductModal').style.display = 'block';
+}
+
+function loadCategoriesForEditForm() {
+    const editProductCategory = document.getElementById('editProductCategory');
+    if (editProductCategory) {
+        editProductCategory.innerHTML = '<option value="">Chọn danh mục</option>';
+        database.categories.forEach(category => {
+            editProductCategory.innerHTML += `<option value="${category.id}">${category.name}</option>`;
+        });
+    }
 }
 
 function deleteProduct(productId) {
-    if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
+    const product = database.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${product.name}"?\nTất cả phiên bản của sản phẩm cũng sẽ bị xóa.`)) return;
     
     database.products = database.products.filter(p => p.id !== productId);
     database.product_variants = database.product_variants.filter(v => v.product_id !== productId);
     saveDatabase();
     loadProducts();
     showNotification('Đã xóa sản phẩm!', 'success');
+}
+
+function editVariant(variantId) {
+    const variant = database.product_variants.find(v => v.id === variantId);
+    if (!variant) return;
+    
+    const newName = prompt('Nhập tên phiên bản mới:', variant.variant_name);
+    if (!newName) return;
+    
+    const newPrice = prompt('Nhập giá mới:', variant.price);
+    if (!newPrice || isNaN(newPrice)) return;
+    
+    const newQuantity = prompt('Nhập số lượng mới:', variant.quantity);
+    if (!newQuantity || isNaN(newQuantity)) return;
+    
+    variant.variant_name = newName;
+    variant.price = parseInt(newPrice);
+    variant.quantity = parseInt(newQuantity);
+    
+    saveDatabase();
+    loadProductVariants(variant.product_id);
+    loadProducts();
+    showNotification('Đã cập nhật phiên bản!', 'success');
+}
+
+function deleteVariant(variantId) {
+    const variant = database.product_variants.find(v => v.id === variantId);
+    if (!variant) return;
+    
+    if (!confirm(`Bạn có chắc chắn muốn xóa phiên bản "${variant.variant_name}"?`)) return;
+    
+    database.product_variants = database.product_variants.filter(v => v.id !== variantId);
+    saveDatabase();
+    loadProductVariants(variant.product_id);
+    loadProducts();
+    showNotification('Đã xóa phiên bản!', 'success');
+}
+
+function editCustomer(customerId) {
+    const customer = database.users.find(u => u.id === customerId);
+    if (!customer) return;
+    
+    // Populate form
+    document.getElementById('editUserId').value = customer.id;
+    document.getElementById('editUserName').value = customer.name;
+    document.getElementById('editUserEmail').value = customer.email;
+    document.getElementById('editUserPhone').value = customer.phone || '';
+    document.getElementById('editUserRole').value = customer.role;
+    document.getElementById('editUserAddress').value = customer.address || '';
+    document.getElementById('editUserPassword').value = '';
+    
+    document.getElementById('editUserModal').style.display = 'block';
 }
 
 function viewCustomerDetails(customerId) {

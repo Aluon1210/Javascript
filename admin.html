@@ -254,20 +254,187 @@
 
     <!-- Add Product Modal -->
     <div id="addProductModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content large-modal">
             <span class="close" onclick="closeModal('addProductModal')">&times;</span>
             <h2>Thêm sản phẩm mới</h2>
             <form id="addProductForm">
-                <input type="text" id="productName" placeholder="Tên sản phẩm" required>
-                <select id="productCategory" required>
-                    <option value="">Chọn danh mục</option>
-                </select>
-                <textarea id="productDetail" placeholder="Mô tả sản phẩm" required></textarea>
-                <input type="url" id="productImage" placeholder="URL hình ảnh" required>
-                <input type="text" id="variantName" placeholder="Tên phiên bản (VD: Size M - Đỏ)" required>
-                <input type="number" id="variantPrice" placeholder="Giá" required>
-                <input type="number" id="variantQuantity" placeholder="Số lượng" required>
-                <button type="submit">Thêm sản phẩm</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Tên sản phẩm *</label>
+                        <input type="text" id="productName" placeholder="Nhập tên sản phẩm" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Danh mục *</label>
+                        <select id="productCategory" required>
+                            <option value="">Chọn danh mục</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDetail">Mô tả sản phẩm *</label>
+                    <textarea id="productDetail" placeholder="Nhập mô tả chi tiết sản phẩm" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">URL hình ảnh *</label>
+                    <input type="url" id="productImage" placeholder="https://example.com/image.jpg" required>
+                </div>
+                
+                <h3>Thông tin phiên bản sản phẩm</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="variantName">Tên phiên bản *</label>
+                        <input type="text" id="variantName" placeholder="VD: Size M - Màu đỏ" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="variantPrice">Giá (VND) *</label>
+                        <input type="number" id="variantPrice" placeholder="299000" min="0" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="variantQuantity">Số lượng *</label>
+                        <input type="number" id="variantQuantity" placeholder="50" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="variantImage">URL hình ảnh phiên bản</label>
+                        <input type="url" id="variantImage" placeholder="https://example.com/variant.jpg">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('addProductModal')" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close" onclick="closeModal('editProductModal')">&times;</span>
+            <h2>Sửa sản phẩm</h2>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductName">Tên sản phẩm *</label>
+                        <input type="text" id="editProductName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductCategory">Danh mục *</label>
+                        <select id="editProductCategory" required>
+                            <option value="">Chọn danh mục</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDetail">Mô tả sản phẩm *</label>
+                    <textarea id="editProductDetail" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage">URL hình ảnh *</label>
+                    <input type="url" id="editProductImage" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('editProductModal')" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Variants Modal -->
+    <div id="productVariantsModal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close" onclick="closeModal('productVariantsModal')">&times;</span>
+            <h2>Quản lý phiên bản sản phẩm</h2>
+            <div class="variants-header">
+                <h3 id="variantsProductName">Tên sản phẩm</h3>
+                <button onclick="showAddVariantModal()" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Thêm phiên bản
+                </button>
+            </div>
+            <div class="variants-list" id="variantsList">
+                <!-- Variants will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Variant Modal -->
+    <div id="addVariantModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addVariantModal')">&times;</span>
+            <h2>Thêm phiên bản mới</h2>
+            <form id="addVariantForm">
+                <input type="hidden" id="variantProductId">
+                <div class="form-group">
+                    <label for="newVariantName">Tên phiên bản *</label>
+                    <input type="text" id="newVariantName" placeholder="VD: Size L - Màu xanh" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newVariantPrice">Giá (VND) *</label>
+                        <input type="number" id="newVariantPrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newVariantQuantity">Số lượng *</label>
+                        <input type="number" id="newVariantQuantity" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newVariantImage">URL hình ảnh</label>
+                    <input type="url" id="newVariantImage" placeholder="https://example.com/variant.jpg">
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('addVariantModal')" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm phiên bản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editUserModal')">&times;</span>
+            <h2>Sửa thông tin người dùng</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editUserName">Họ tên *</label>
+                    <input type="text" id="editUserName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUserEmail">Email *</label>
+                    <input type="email" id="editUserEmail" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editUserPhone">Số điện thoại</label>
+                        <input type="tel" id="editUserPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserRole">Vai trò</label>
+                        <select id="editUserRole">
+                            <option value="user">Người dùng</option>
+                            <option value="admin">Quản trị viên</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editUserAddress">Địa chỉ</label>
+                    <textarea id="editUserAddress" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editUserPassword">Mật khẩu mới (để trống nếu không đổi)</label>
+                    <input type="password" id="editUserPassword" placeholder="Nhập mật khẩu mới">
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('editUserModal')" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
             </form>
         </div>
     </div>
