@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-store"></i> Susan Shop</a></h1>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="products.html">Sản phẩm</a></li>
+                        <li><a href="categories.html">Danh mục</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                        <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="user-actions">
+                        <button id="loginBtn" onclick="window.location.href='login.html'" class="hidden"><i class="fas fa-user"></i> Đăng nhập</button>
+                        <button id="userProfile" onclick="showUserMenu()"><i class="fas fa-user-circle"></i> <span id="userName"></span></button>
+                        <button onclick="window.location.href='cart.html'"><i class="fas fa-shopping-cart"></i> Giỏ hàng (<span id="cartCount">0</span>)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Trang chủ</a> > <span>Thông tin cá nhân</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-container">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 id="profileName">Tên người dùng</h3>
+                        <p id="profileRole">Khách hàng</p>
+                    </div>
+                    
+                    <nav class="profile-nav">
+                        <a href="#" onclick="showProfileTab('info')" class="profile-nav-item active" data-tab="info">
+                            <i class="fas fa-user"></i>
+                            <span>Thông tin cá nhân</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('orders')" class="profile-nav-item" data-tab="orders">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Đơn hàng của tôi</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('addresses')" class="profile-nav-item" data-tab="addresses">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Địa chỉ giao hàng</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('security')" class="profile-nav-item" data-tab="security">
+                            <i class="fas fa-lock"></i>
+                            <span>Bảo mật</span>
+                        </a>
+                        <a href="cart.html" class="profile-nav-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Giỏ hàng</span>
+                        </a>
+                        <a href="#" onclick="logout()" class="profile-nav-item logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Đăng xuất</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Main Content -->
+                <div class="profile-content">
+                    <!-- Personal Info Tab -->
+                    <div id="info-tab" class="profile-tab active">
+                        <div class="tab-header">
+                            <h2>Thông tin cá nhân</h2>
+                            <button onclick="toggleEditMode()" class="btn btn-primary" id="editBtn">
+                                <i class="fas fa-edit"></i> Chỉnh sửa
+                            </button>
+                        </div>
+
+                        <div class="profile-form">
+                            <form id="profileForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fullName">
+                                            <i class="fas fa-user"></i>
+                                            Họ và tên
+                                        </label>
+                                        <input type="text" id="fullName" name="fullName" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">
+                                            <i class="fas fa-envelope"></i>
+                                            Email
+                                        </label>
+                                        <input type="email" id="email" name="email" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">
+                                            <i class="fas fa-phone"></i>
+                                            Số điện thoại
+                                        </label>
+                                        <input type="tel" id="phone" name="phone" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthDate">
+                                            <i class="fas fa-birthday-cake"></i>
+                                            Ngày sinh
+                                        </label>
+                                        <input type="date" id="birthDate" name="birthDate" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Địa chỉ
+                                    </label>
+                                    <textarea id="address" name="address" rows="3" readonly></textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="gender">
+                                            <i class="fas fa-venus-mars"></i>
+                                            Giới tính
+                                        </label>
+                                        <select id="gender" name="gender" disabled>
+                                            <option value="">Chọn giới tính</option>
+                                            <option value="male">Nam</option>
+                                            <option value="female">Nữ</option>
+                                            <option value="other">Khác</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="joinDate">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            Ngày tham gia
+                                        </label>
+                                        <input type="text" id="joinDate" name="joinDate" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions hidden" id="formActions">
+                                    <button type="button" onclick="cancelEdit()" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Hủy
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Lưu thay đổi
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Orders Tab -->
+                    <div id="orders-tab" class="profile-tab">
+                        <div class="tab-header">
+                            <h2>Đơn hàng của tôi</h2>
+                            <div class="order-filters">
+                                <select id="orderStatusFilter" onchange="filterOrders()">
+                                    <option value="">Tất cả đơn hàng</option>
+                                    <option value="pending">Chờ xử lý</option>
+                                    <option value="processing">Đang xử lý</option>
+                                    <option value="shipping">Đang giao hàng</option>
+                                    <option value="completed">Hoàn thành</option>
+                                    <option value="cancelled">Đã hủy</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="orders-list" id="ordersList">
+                            <!-- Orders will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div id="addresses-tab" class="profile-tab">
+                        <div class="tab-header">
+                            <h2>Địa chỉ giao hàng</h2>
+                            <button onclick="showAddAddressModal()" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Thêm địa chỉ
+                            </button>
+                        </div>
+
+                        <div class="addresses-list" id="addressesList">
+                            <!-- Addresses will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div id="security-tab" class="profile-tab">
+                        <div class="tab-header">
+                            <h2>Bảo mật tài khoản</h2>
+                        </div>
+
+                        <div class="security-content">
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h3>Đổi mật khẩu</h3>
+                                    <p>Cập nhật mật khẩu để bảo vệ tài khoản của bạn</p>
+                                </div>
+                                <button onclick="showChangePasswordModal()" class="btn btn-primary">
+                                    <i class="fas fa-key"></i> Đổi mật khẩu
+                                </button>
+                            </div>
+
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h3>Xác thực 2 bước</h3>
+                                    <p>Tăng cường bảo mật với xác thực 2 bước</p>
+                                </div>
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="fas fa-shield-alt"></i> Đang phát triển
+                                </button>
+                            </div>
+
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h3>Lịch sử đăng nhập</h3>
+                                    <p>Xem các lần đăng nhập gần đây</p>
+                                </div>
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="fas fa-history"></i> Đang phát triển
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Susan Shop</h3>
+                    <p>Cửa hàng thời trang uy tín với nhiều năm kinh nghiệm</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liên hệ</h3>
+                    <p><i class="fas fa-phone"></i> 0123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@susanshop.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, TP.HCM</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Theo dõi chúng tôi</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Susan Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('changePasswordModal')">&times;</span>
+            <h2>Đổi mật khẩu</h2>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Mật khẩu hiện tại</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Mật khẩu mới</label>
+                    <input type="password" id="newPassword" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                    <input type="password" id="confirmNewPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('changePasswordModal')" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

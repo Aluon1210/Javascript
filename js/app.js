@@ -371,12 +371,12 @@ function showUserMenu() {
 }
 
 function viewProfile() {
-    showNotification('Tính năng xem thông tin cá nhân đang được phát triển!', 'info');
+    window.location.href = 'profile.html';
     document.querySelector('.user-dropdown')?.remove();
 }
 
 function viewOrders() {
-    showNotification('Tính năng xem đơn hàng đang được phát triển!', 'info');
+    window.location.href = 'profile.html#orders';
     document.querySelector('.user-dropdown')?.remove();
 }
 
@@ -570,40 +570,7 @@ function updateCartCount() {
 }
 
 function showCart() {
-    const cartModal = document.getElementById('cartModal');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    
-    if (!cartModal || !cartItems || !cartTotal) return;
-    
-    if (cart.length === 0) {
-        cartItems.innerHTML = '<p>Giỏ hàng trống</p>';
-        cartTotal.textContent = '0';
-    } else {
-        cartItems.innerHTML = cart.map((item, index) => `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.productName}">
-                <div class="cart-item-info">
-                    <h4>${item.productName}</h4>
-                    <p>${item.variantName}</p>
-                    <p>${formatPrice(item.price)}</p>
-                </div>
-                <div class="cart-item-controls">
-                    <button onclick="updateCartQuantity(${index}, -1)">-</button>
-                    <span>${item.quantity}</span>
-                    <button onclick="updateCartQuantity(${index}, 1)">+</button>
-                    <button onclick="removeFromCart(${index})" style="background: #dc3545; margin-left: 10px;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-        
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        cartTotal.textContent = formatPrice(total);
-    }
-    
-    cartModal.style.display = 'block';
+    window.location.href = 'cart.html';
 }
 
 function updateCartQuantity(index, change) {
