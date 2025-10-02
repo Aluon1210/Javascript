@@ -230,12 +230,22 @@ class UserMenu {
         switch (action) {
             case 'profile':
                 this.close();
+                // Ensure user data is saved before navigation
+                if (currentUser) {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    console.log('User data saved before profile navigation:', currentUser);
+                }
                 setTimeout(() => {
                     window.location.href = 'profile.html';
                 }, 100);
                 break;
             case 'orders':
                 this.close();
+                // Ensure user data is saved before navigation
+                if (currentUser) {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    console.log('User data saved before orders navigation:', currentUser);
+                }
                 setTimeout(() => {
                     window.location.href = 'profile.html#orders';
                 }, 100);

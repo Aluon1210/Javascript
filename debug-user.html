@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug User State - Susan Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .debug-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+        .debug-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .status-good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-bad {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .status-warning {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🐛 Debug User State</h1>
+        <p>Trang này giúp debug vấn đề với user authentication</p>
+
+        <div class="debug-section">
+            <h3>1. Global Variables</h3>
+            <p><strong>currentUser:</strong> <span id="currentUserStatus">Checking...</span></p>
+            <p><strong>database:</strong> <span id="databaseStatus">Checking...</span></p>
+            <p><strong>cart:</strong> <span id="cartStatus">Checking...</span></p>
+        </div>
+
+        <div class="debug-section">
+            <h3>2. LocalStorage</h3>
+            <p><strong>currentUser in localStorage:</strong> <span id="localStorageUserStatus">Checking...</span></p>
+            <p><strong>cart in localStorage:</strong> <span id="localStorageCartStatus">Checking...</span></p>
+            <button onclick="clearLocalStorage()">Clear LocalStorage</button>
+            <button onclick="refreshStatus()">Refresh Status</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>3. User Data</h3>
+            <pre id="userData">Loading...</pre>
+        </div>
+
+        <div class="debug-section">
+            <h3>4. Test Actions</h3>
+            <button onclick="testLogin()">Test Login</button>
+            <button onclick="testProfileAccess()">Test Profile Access</button>
+            <button onclick="testUserMenu()">Test User Menu</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>5. Navigation Tests</h3>
+            <button onclick="goToProfile()">Go to Profile</button>
+            <button onclick="goToCart()">Go to Cart</button>
+            <button onclick="goToLogin()">Go to Login</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>6. Console Logs</h3>
+            <p>Mở Developer Tools (F12) để xem console logs chi tiết</p>
+            <button onclick="console.clear()">Clear Console</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/user-menu.js"></script>
+    <script>
+        function updateStatus() {
+            // Check currentUser
+            const currentUserStatus = document.getElementById('currentUserStatus');
+            if (currentUser) {
+                currentUserStatus.innerHTML = `<span class="status-good">✅ Loaded: ${currentUser.name} (${currentUser.role})</span>`;
+            } else {
+                currentUserStatus.innerHTML = `<span class="status-bad">❌ Not loaded</span>`;
+            }
+
+            // Check database
+            const databaseStatus = document.getElementById('databaseStatus');
+            if (database) {
+                databaseStatus.innerHTML = `<span class="status-good">✅ Loaded: ${database.users?.length || 0} users, ${database.products?.length || 0} products</span>`;
+            } else {
+                databaseStatus.innerHTML = `<span class="status-bad">❌ Not loaded</span>`;
+            }
+
+            // Check cart
+            const cartStatus = document.getElementById('cartStatus');
+            if (cart && Array.isArray(cart)) {
+                cartStatus.innerHTML = `<span class="status-good">✅ Loaded: ${cart.length} items</span>`;
+            } else {
+                cartStatus.innerHTML = `<span class="status-bad">❌ Not loaded</span>`;
+            }
+
+            // Check localStorage
+            const localStorageUserStatus = document.getElementById('localStorageUserStatus');
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    localStorageUserStatus.innerHTML = `<span class="status-good">✅ Found: ${user.name}</span>`;
+                } catch (e) {
+                    localStorageUserStatus.innerHTML = `<span class="status-bad">❌ Invalid JSON</span>`;
+                }
+            } else {
+                localStorageUserStatus.innerHTML = `<span class="status-bad">❌ Not found</span>`;
+            }
+
+            const localStorageCartStatus = document.getElementById('localStorageCartStatus');
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    const cartData = JSON.parse(savedCart);
+                    localStorageCartStatus.innerHTML = `<span class="status-good">✅ Found: ${cartData.length} items</span>`;
+                } catch (e) {
+                    localStorageCartStatus.innerHTML = `<span class="status-bad">❌ Invalid JSON</span>`;
+                }
+            } else {
+                localStorageCartStatus.innerHTML = `<span class="status-warning">⚠️ Empty cart</span>`;
+            }
+
+            // Show user data
+            const userData = document.getElementById('userData');
+            if (currentUser) {
+                userData.textContent = JSON.stringify(currentUser, null, 2);
+            } else {
+                userData.textContent = 'No user data available';
+            }
+        }
+
+        function refreshStatus() {
+            updateStatus();
+        }
+
+        function clearLocalStorage() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả dữ liệu localStorage?')) {
+                localStorage.clear();
+                currentUser = null;
+                cart = [];
+                updateStatus();
+                alert('Đã xóa localStorage. Refresh trang để test lại.');
+            }
+        }
+
+        function testLogin() {
+            // Simulate login
+            const testUser = {
+                id: 1,
+                name: "Test User",
+                email: "test@example.com",
+                phone: "0123456789",
+                address: "123 Test Street",
+                role: "user",
+                password: "test123"
+            };
+            
+            currentUser = testUser;
+            localStorage.setItem('currentUser', JSON.stringify(testUser));
+            updateStatus();
+            alert('Test login successful!');
+        }
+
+        function testProfileAccess() {
+            if (!currentUser) {
+                alert('❌ No user logged in. Test login first.');
+                return;
+            }
+            
+            alert(`✅ User is logged in: ${currentUser.name}. Profile access should work.`);
+        }
+
+        function testUserMenu() {
+            if (typeof showUserMenu === 'function') {
+                showUserMenu();
+                alert('User menu function called. Check if dropdown appears.');
+            } else {
+                alert('❌ showUserMenu function not found');
+            }
+        }
+
+        function goToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        function goToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Auto-update status every 2 seconds
+        setInterval(updateStatus, 2000);
+
+        // Initial status update
+        setTimeout(updateStatus, 1000);
+    </script>
+</body>
+</html>

@@ -8,26 +8,88 @@ let originalFormData = {};
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Profile page DOM loaded');
     
-    // Check if user is logged in
+    // Show loading state
+    showLoadingState();
+    
+    // Wait for app.js to initialize
+    let attempts = 0;
+    const maxAttempts = 100; // Increase max attempts
+    
+    while (attempts < maxAttempts) {
+        console.log(`Attempt ${attempts + 1}/${maxAttempts}: Checking user and database...`);
+        
+        // Try to ensure user is loaded
+        if (typeof ensureUserLoaded === 'function') {
+            ensureUserLoaded();
+        } else {
+            // Fallback if ensureUserLoaded is not available yet
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser && !currentUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    console.log('Loaded user from localStorage (fallback):', currentUser);
+                } catch (e) {
+                    console.error('Error parsing saved user:', e);
+                }
+            }
+        }
+        
+        // Check if we have both user and database
+        if (currentUser && database) {
+            console.log('Both user and database are ready!');
+            break;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+    
+    // Hide loading state
+    hideLoadingState();
+    
+    // Final check if user is logged in
     if (!currentUser) {
+        console.log('No user found after waiting');
         showNotification('Vui lòng đăng nhập để xem thông tin cá nhân!', 'error');
         setTimeout(() => {
             window.location.href = 'login.html';
-        }, 2000);
+        }, 3000);
         return;
     }
     
-    // Wait for database to load
-    while (!database) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-    }
+    console.log('Profile page ready with user:', currentUser);
     
+    // Initialize profile
     loadUserProfile();
     setupProfileForms();
     
     // Load default tab content
     showProfileTab('info');
+    
+    // Handle URL hash for direct tab access
+    const hash = window.location.hash.replace('#', '');
+    if (hash && ['info', 'orders', 'addresses', 'security'].includes(hash)) {
+        showProfileTab(hash);
+    }
 });
+
+function showLoadingState() {
+    const profileContent = document.querySelector('.profile-content');
+    if (profileContent) {
+        profileContent.innerHTML = `
+            <div class="loading" style="padding: 4rem; text-align: center;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;"></i>
+                <h3>Đang tải thông tin...</h3>
+                <p>Vui lòng đợi trong giây lát</p>
+            </div>
+        `;
+    }
+}
+
+function hideLoadingState() {
+    // The loading state will be replaced when profile content loads
+    console.log('Loading state will be replaced by profile content');
+}
 
 function loadUserProfile() {
     if (!currentUser) return;

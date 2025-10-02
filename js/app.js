@@ -3,6 +3,26 @@ let database = null;
 let currentUser = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+// Utility function to ensure user is loaded
+function ensureUserLoaded() {
+    if (!currentUser) {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                console.log('User loaded by ensureUserLoaded:', currentUser);
+                return true;
+            } catch (e) {
+                console.error('Error parsing saved user:', e);
+                localStorage.removeItem('currentUser');
+                return false;
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('DOM Content Loaded - Initializing app...');
@@ -204,25 +224,37 @@ function handleRegister(e) {
 }
 
 function checkUserLogin() {
+    console.log('Checking user login...');
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateUserInterface();
+        try {
+            currentUser = JSON.parse(savedUser);
+            console.log('User loaded from localStorage:', currentUser);
+            updateUserInterface();
+        } catch (e) {
+            console.error('Error parsing saved user:', e);
+            localStorage.removeItem('currentUser');
+        }
+    } else {
+        console.log('No saved user found');
     }
 }
 
 function updateUserInterface() {
+    console.log('Updating user interface for:', currentUser);
     const loginBtn = document.getElementById('loginBtn');
     const userProfile = document.getElementById('userProfile');
     const userName = document.getElementById('userName');
     
     if (currentUser) {
-        loginBtn.classList.add('hidden');
-        userProfile.classList.remove('hidden');
-        userName.textContent = currentUser.name;
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (userProfile) userProfile.classList.remove('hidden');
+        if (userName) userName.textContent = currentUser.name;
+        console.log('UI updated for logged in user');
     } else {
-        loginBtn.classList.remove('hidden');
-        userProfile.classList.add('hidden');
+        if (loginBtn) loginBtn.classList.remove('hidden');
+        if (userProfile) userProfile.classList.add('hidden');
+        console.log('UI updated for logged out user');
     }
 }
 
