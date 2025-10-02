@@ -847,9 +847,15 @@ function showNotification(message, type = 'info') {
 
 function saveDatabase() {
     // In a real application, this would send data to a server
-    // For this demo, we'll just update localStorage
-    localStorage.setItem('database', JSON.stringify(database));
-    console.log('Database saved to localStorage');
+    // For this demo, we'll save to localStorage and update global reference
+    if (database) {
+        localStorage.setItem('database', JSON.stringify(database));
+        window.database = database; // Ensure global reference is updated
+        console.log('Database saved to localStorage and global reference updated');
+        console.log('Current database users:', database.users?.length || 0);
+    } else {
+        console.error('Cannot save database: database is null');
+    }
 }
 
 // Close modals when clicking outside

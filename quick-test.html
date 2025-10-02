@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Test - Susan Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f0f0f0; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Quick Test Susan Shop</h1>
+        
+        <h2>1. Test Database</h2>
+        <button onclick="testDB()">Test Database Load</button>
+        <div id="dbResult" class="result info">Click button to test</div>
+        
+        <h2>2. Test Login</h2>
+        <button onclick="testAdminLogin()">Test Admin Login</button>
+        <button onclick="testUserLogin()">Test User Login</button>
+        <div id="loginResult" class="result info">Click button to test</div>
+        
+        <h2>3. Test Navigation</h2>
+        <button onclick="window.location.href='login.html'">Go to Login Page</button>
+        <button onclick="window.location.href='register.html'">Go to Register Page</button>
+        <button onclick="window.location.href='profile.html'">Go to Profile Page</button>
+        
+        <h2>4. Current Status</h2>
+        <div id="status" class="result info">Loading...</div>
+        
+        <h2>5. Quick Actions</h2>
+        <button onclick="clearData()">Clear All Data</button>
+        <button onclick="refreshPage()">Refresh Page</button>
+        <button onclick="window.location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        let testDatabase = null;
+        let testCurrentUser = null;
+
+        async function testDB() {
+            const result = document.getElementById('dbResult');
+            result.innerHTML = 'Loading database...';
+            result.className = 'result info';
+
+            try {
+                const response = await fetch('data/database.json');
+                testDatabase = await response.json();
+                
+                result.innerHTML = `✅ Database loaded! Users: ${testDatabase.users.length}, Products: ${testDatabase.products.length}`;
+                result.className = 'result success';
+                
+                updateStatus();
+            } catch (error) {
+                result.innerHTML = `❌ Database failed: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testAdminLogin() {
+            const result = document.getElementById('loginResult');
+            
+            if (!testDatabase) {
+                result.innerHTML = '❌ Please test database first';
+                result.className = 'result error';
+                return;
+            }
+
+            const user = testDatabase.users.find(u => u.email === 'admin@susanshop.com' && u.password === 'admin123');
+            
+            if (user) {
+                testCurrentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                result.innerHTML = `✅ Admin login successful: ${user.name}`;
+                result.className = 'result success';
+                
+                updateStatus();
+            } else {
+                result.innerHTML = '❌ Admin login failed';
+                result.className = 'result error';
+            }
+        }
+
+        async function testUserLogin() {
+            const result = document.getElementById('loginResult');
+            
+            if (!testDatabase) {
+                result.innerHTML = '❌ Please test database first';
+                result.className = 'result error';
+                return;
+            }
+
+            const user = testDatabase.users.find(u => u.email === 'user@test.com' && u.password === 'user123');
+            
+            if (user) {
+                testCurrentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                result.innerHTML = `✅ User login successful: ${user.name}`;
+                result.className = 'result success';
+                
+                updateStatus();
+            } else {
+                result.innerHTML = '❌ User login failed';
+                result.className = 'result error';
+            }
+        }
+
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            let statusHTML = '';
+            
+            if (testCurrentUser) {
+                statusHTML += `<strong>Test User:</strong> ${testCurrentUser.name} (${testCurrentUser.role})<br>`;
+            }
+            
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    statusHTML += `<strong>Saved User:</strong> ${user.name} (${user.role})<br>`;
+                } catch (e) {
+                    statusHTML += `<strong>Saved User:</strong> Invalid JSON<br>`;
+                }
+            } else {
+                statusHTML += `<strong>Saved User:</strong> None<br>`;
+            }
+            
+            if (testDatabase) {
+                statusHTML += `<strong>Database:</strong> ${testDatabase.users.length} users<br>`;
+            } else {
+                statusHTML += `<strong>Database:</strong> Not loaded<br>`;
+            }
+            
+            status.innerHTML = statusHTML;
+            status.className = 'result info';
+        }
+
+        function clearData() {
+            if (confirm('Clear all localStorage data?')) {
+                localStorage.clear();
+                testCurrentUser = null;
+                updateStatus();
+                document.getElementById('loginResult').innerHTML = 'Data cleared';
+                document.getElementById('loginResult').className = 'result info';
+            }
+        }
+
+        function refreshPage() {
+            window.location.reload();
+        }
+
+        // Auto-update status
+        setInterval(updateStatus, 2000);
+        setTimeout(updateStatus, 500);
+    </script>
+</body>
+</html>

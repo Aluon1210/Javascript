@@ -68,6 +68,7 @@ async function handleLogin(e) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Find user in database
+        console.log('Searching in database users:', database.users);
         const user = database.users.find(u => u.email === email && u.password === password);
         console.log('User found:', user);
         
@@ -80,7 +81,11 @@ async function handleLogin(e) {
                 localStorage.setItem('rememberLogin', 'true');
             }
             
-            showNotification('Đăng nhập thành công!', 'success');
+            // Update global database reference
+            window.database = database;
+            window.currentUser = currentUser;
+            
+            showAuthNotification('Đăng nhập thành công!', 'success');
             
             // Redirect based on role
             setTimeout(() => {
@@ -92,7 +97,8 @@ async function handleLogin(e) {
             }, 1500);
             
         } else {
-            showNotification('Email hoặc mật khẩu không đúng!', 'error');
+            showAuthNotification('Email hoặc mật khẩu không đúng!', 'error');
+            console.log('Available users:', database.users.map(u => ({ email: u.email, role: u.role })));
         }
         
     } catch (error) {
@@ -160,7 +166,7 @@ async function handleRegister(e) {
         // Check if email already exists
         const existingUser = database.users.find(u => u.email === email);
         if (existingUser) {
-            showNotification('Email đã được sử dụng!', 'error');
+            showAuthNotification('Email đã được sử dụng!', 'error');
             return;
         }
         
@@ -179,11 +185,17 @@ async function handleRegister(e) {
         
         // Add to database
         database.users.push(newUser);
-        saveDatabase();
+        
+        // Update global database reference
+        window.database = database;
+        
+        // Save to localStorage as backup
+        localStorage.setItem('database', JSON.stringify(database));
         
         console.log('New user created:', newUser);
+        console.log('Updated database users:', database.users.length);
         
-        showNotification('Đăng ký thành công! Đang chuyển đến trang đăng nhập...', 'success');
+        showAuthNotification('Đăng ký thành công! Đang chuyển đến trang đăng nhập...', 'success');
         
         // Redirect to login page
         setTimeout(() => {
@@ -315,10 +327,8 @@ function showAuthNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Override the global showNotification for auth pages
-if (typeof showNotification === 'undefined') {
-    window.showNotification = showAuthNotification;
-}
+// Use the auth notification function for auth pages
+window.showNotification = showAuthNotification;
 
 // Check if user is already logged in
 function checkAuthRedirect() {
