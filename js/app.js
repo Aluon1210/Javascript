@@ -273,15 +273,15 @@ function showUserMenu() {
                 </div>
             </div>
             <hr>
-            <a href="#" onclick="viewProfile()">
+            <a href="#" onclick="event.preventDefault(); viewProfile()">
                 <i class="fas fa-user"></i> Thông tin cá nhân
             </a>
-            <a href="#" onclick="viewOrders()">
+            <a href="#" onclick="event.preventDefault(); viewOrders()">
                 <i class="fas fa-shopping-bag"></i> Đơn hàng của tôi
             </a>
             ${currentUser.role === 'admin' ? '<a href="admin.html"><i class="fas fa-cog"></i> Quản trị</a>' : ''}
             <hr>
-            <a href="#" onclick="logout()" class="logout-btn">
+            <a href="#" onclick="event.preventDefault(); logout()" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i> Đăng xuất
             </a>
         </div>
@@ -343,6 +343,7 @@ function showUserMenu() {
                 color: #333;
                 text-decoration: none;
                 transition: color 0.3s;
+                cursor: pointer;
             }
             .user-dropdown a:hover {
                 color: #667eea;
@@ -359,25 +360,78 @@ function showUserMenu() {
     userProfile.style.position = 'relative';
     userProfile.appendChild(dropdown);
     
-    // Close dropdown when clicking outside
-    setTimeout(() => {
-        document.addEventListener('click', function closeDropdown(e) {
-            if (!userProfile.contains(e.target)) {
-                dropdown.remove();
-                document.removeEventListener('click', closeDropdown);
+    // Prevent dropdown from closing when clicking inside it
+    dropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    
+    // Close dropdown when clicking outside - with proper timing
+    let closeDropdownHandler;
+    let keydownHandler;
+    
+    const removeDropdown = () => {
+        if (dropdown && dropdown.parentNode) {
+            dropdown.remove();
+        }
+        // Clean up event listeners
+        if (closeDropdownHandler) {
+            document.removeEventListener('click', closeDropdownHandler);
+            document.removeEventListener('touchstart', closeDropdownHandler);
+        }
+        if (keydownHandler) {
+            document.removeEventListener('keydown', keydownHandler);
+        }
+    };
+    
+    const setupCloseHandler = () => {
+        closeDropdownHandler = function(e) {
+            // Check if click is outside the dropdown and user profile button
+            if (!userProfile.contains(e.target) && !dropdown.contains(e.target)) {
+                removeDropdown();
             }
-        });
-    }, 100);
+        };
+        
+        // Handle ESC key to close dropdown
+        keydownHandler = function(e) {
+            if (e.key === 'Escape') {
+                removeDropdown();
+            }
+        };
+        
+        // Add event listeners for both mouse and touch
+        document.addEventListener('click', closeDropdownHandler);
+        document.addEventListener('touchstart', closeDropdownHandler);
+        document.addEventListener('keydown', keydownHandler);
+    };
+    
+    // Setup close handler after a short delay to prevent immediate closing
+    setTimeout(setupCloseHandler, 150);
 }
 
 function viewProfile() {
-    window.location.href = 'profile.html';
-    document.querySelector('.user-dropdown')?.remove();
+    // Close dropdown first
+    const dropdown = document.querySelector('.user-dropdown');
+    if (dropdown) {
+        dropdown.remove();
+    }
+    
+    // Small delay before navigation to ensure dropdown is closed
+    setTimeout(() => {
+        window.location.href = 'profile.html';
+    }, 100);
 }
 
 function viewOrders() {
-    window.location.href = 'profile.html#orders';
-    document.querySelector('.user-dropdown')?.remove();
+    // Close dropdown first
+    const dropdown = document.querySelector('.user-dropdown');
+    if (dropdown) {
+        dropdown.remove();
+    }
+    
+    // Small delay before navigation to ensure dropdown is closed
+    setTimeout(() => {
+        window.location.href = 'profile.html#orders';
+    }, 100);
 }
 
 // Home page functions
