@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Register - Susan Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .section { margin: 2rem 0; padding: 1.5rem; border: 1px solid #e9ecef; border-radius: 10px; }
+        .form-group { margin: 1rem 0; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        button { background: #667eea; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; margin: 0.5rem; font-size: 1rem; transition: background 0.3s; }
+        button:hover { background: #5a6fd8; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        button.success { background: #28a745; }
+        button.success:hover { background: #218838; }
+        .status { padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .status.warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        pre { background: #f8f9fa; padding: 1rem; border-radius: 5px; overflow-x: auto; font-size: 0.9rem; }
+        .user-list { max-height: 300px; overflow-y: auto; }
+        .user-item { padding: 0.8rem; margin: 0.5rem 0; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #667eea; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Registration System</h1>
+        <p>Kiểm tra và debug hệ thống đăng ký tài khoản</p>
+
+        <div class="section">
+            <h2>1. Database Status</h2>
+            <div id="dbStatus" class="status info">Đang kiểm tra...</div>
+            <button onclick="loadDB()">Load Database</button>
+            <button onclick="showCurrentUsers()">Show Current Users</button>
+            <button class="danger" onclick="clearDatabase()">Clear Database</button>
+        </div>
+
+        <div class="section">
+            <h2>2. Test Registration Form</h2>
+            <form id="testRegForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Họ *</label>
+                        <input type="text" id="firstName" value="Nguyễn" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Tên *</label>
+                        <input type="text" id="lastName" value="Văn Test" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" value="" placeholder="test@example.com" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại *</label>
+                        <input type="tel" id="phone" value="0123456789" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mật khẩu *</label>
+                        <input type="password" id="password" value="test123456" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Địa chỉ *</label>
+                    <textarea id="address" required>123 Đường Test, Quận 1, TP.HCM</textarea>
+                </div>
+                
+                <button type="submit">Test Register</button>
+                <button type="button" onclick="generateRandomUser()">Generate Random User</button>
+            </form>
+            <div id="regStatus" class="status info">Chưa test</div>
+        </div>
+
+        <div class="section">
+            <h2>3. Current Users in Database</h2>
+            <div id="usersList" class="user-list">Loading...</div>
+            <button onclick="refreshUsersList()">Refresh Users List</button>
+        </div>
+
+        <div class="section">
+            <h2>4. LocalStorage Debug</h2>
+            <div id="localStorageInfo">Loading...</div>
+            <button onclick="showLocalStorage()">Show LocalStorage</button>
+            <button class="danger" onclick="clearLocalStorage()">Clear LocalStorage</button>
+        </div>
+
+        <div class="section">
+            <h2>5. Test Login with New Account</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Email vừa đăng ký">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Mật khẩu vừa đăng ký">
+                </div>
+            </div>
+            <button onclick="testLogin()">Test Login</button>
+            <div id="loginTestStatus" class="status info">Chưa test</div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let localDatabase = null;
+
+        async function loadDB() {
+            const status = document.getElementById('dbStatus');
+            status.innerHTML = 'Đang tải database...';
+            status.className = 'status info';
+
+            try {
+                // Try localStorage first
+                const savedDb = localStorage.getItem('database');
+                if (savedDb) {
+                    localDatabase = JSON.parse(savedDb);
+                    status.innerHTML = `✅ Database loaded from localStorage!<br>Users: ${localDatabase.users.length}`;
+                    status.className = 'status success';
+                    refreshUsersList();
+                    return;
+                }
+
+                // Load from JSON file
+                const response = await fetch('data/database.json');
+                localDatabase = await response.json();
+                
+                status.innerHTML = `✅ Database loaded from JSON file!<br>Users: ${localDatabase.users.length}`;
+                status.className = 'status success';
+                
+                // Save to localStorage
+                localStorage.setItem('database', JSON.stringify(localDatabase));
+                
+                refreshUsersList();
+                
+            } catch (error) {
+                status.innerHTML = `❌ Error: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        async function testRegister() {
+            const status = document.getElementById('regStatus');
+            status.innerHTML = 'Đang test đăng ký...';
+            status.className = 'status info';
+
+            if (!localDatabase) {
+                status.innerHTML = '❌ Database chưa load. Click "Load Database" trước.';
+                status.className = 'status error';
+                return;
+            }
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const password = document.getElementById('password').value;
+
+            // Validation
+            if (!firstName || !lastName || !email || !phone || !address || !password) {
+                status.innerHTML = '❌ Vui lòng điền đầy đủ thông tin!';
+                status.className = 'status error';
+                return;
+            }
+
+            // Check email exists
+            const existingUser = localDatabase.users.find(u => u.email === email);
+            if (existingUser) {
+                status.innerHTML = '❌ Email đã tồn tại!';
+                status.className = 'status error';
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Math.max(...localDatabase.users.map(u => u.id), 0) + 1,
+                name: `${firstName} ${lastName}`,
+                email: email,
+                phone: phone,
+                address: address,
+                password: password,
+                role: 'user',
+                created_at: new Date().toISOString()
+            };
+
+            // Add to database
+            localDatabase.users.push(newUser);
+            
+            // Save to localStorage
+            localStorage.setItem('database', JSON.stringify(localDatabase));
+            
+            // Update global database if available
+            if (typeof database !== 'undefined') {
+                database.users.push(newUser);
+                window.database = database;
+            }
+
+            status.innerHTML = `✅ Đăng ký thành công!<br>
+                ID: ${newUser.id}<br>
+                Name: ${newUser.name}<br>
+                Email: ${newUser.email}`;
+            status.className = 'status success';
+
+            // Update login form
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+
+            refreshUsersList();
+        }
+
+        function generateRandomUser() {
+            const randomNum = Math.floor(Math.random() * 1000);
+            document.getElementById('firstName').value = 'User';
+            document.getElementById('lastName').value = `Test${randomNum}`;
+            document.getElementById('email').value = `user${randomNum}@test.com`;
+            document.getElementById('phone').value = `012345${randomNum.toString().padStart(4, '0')}`;
+            document.getElementById('address').value = `${randomNum} Test Street, Test City`;
+            document.getElementById('password').value = `test${randomNum}`;
+        }
+
+        function refreshUsersList() {
+            const usersList = document.getElementById('usersList');
+            
+            if (!localDatabase || !localDatabase.users) {
+                usersList.innerHTML = 'No database loaded';
+                return;
+            }
+
+            usersList.innerHTML = localDatabase.users.map(user => `
+                <div class="user-item">
+                    <strong>${user.name}</strong> (${user.role})<br>
+                    Email: ${user.email}<br>
+                    ID: ${user.id} | Phone: ${user.phone || 'N/A'}
+                </div>
+            `).join('');
+        }
+
+        function showCurrentUsers() {
+            refreshUsersList();
+        }
+
+        function showLocalStorage() {
+            const info = document.getElementById('localStorageInfo');
+            const dbData = localStorage.getItem('database');
+            const userData = localStorage.getItem('currentUser');
+            const usersBackup = localStorage.getItem('users_backup');
+
+            let html = '';
+            
+            if (dbData) {
+                try {
+                    const db = JSON.parse(dbData);
+                    html += `<strong>Database:</strong> ${db.users?.length || 0} users<br>`;
+                } catch (e) {
+                    html += `<strong>Database:</strong> Invalid JSON<br>`;
+                }
+            } else {
+                html += `<strong>Database:</strong> Not found<br>`;
+            }
+
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    html += `<strong>Current User:</strong> ${user.name} (${user.email})<br>`;
+                } catch (e) {
+                    html += `<strong>Current User:</strong> Invalid JSON<br>`;
+                }
+            } else {
+                html += `<strong>Current User:</strong> Not found<br>`;
+            }
+
+            if (usersBackup) {
+                try {
+                    const users = JSON.parse(usersBackup);
+                    html += `<strong>Users Backup:</strong> ${users.length} users<br>`;
+                } catch (e) {
+                    html += `<strong>Users Backup:</strong> Invalid JSON<br>`;
+                }
+            } else {
+                html += `<strong>Users Backup:</strong> Not found<br>`;
+            }
+
+            info.innerHTML = html;
+        }
+
+        function clearDatabase() {
+            if (confirm('Xóa tất cả dữ liệu database?')) {
+                localStorage.removeItem('database');
+                localStorage.removeItem('users_backup');
+                localDatabase = null;
+                refreshUsersList();
+                document.getElementById('dbStatus').innerHTML = 'Database cleared';
+                document.getElementById('dbStatus').className = 'status warning';
+            }
+        }
+
+        function clearLocalStorage() {
+            if (confirm('Xóa tất cả localStorage?')) {
+                localStorage.clear();
+                localDatabase = null;
+                refreshUsersList();
+                showLocalStorage();
+            }
+        }
+
+        function testLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const status = document.getElementById('loginTestStatus');
+
+            if (!email || !password) {
+                status.innerHTML = '❌ Vui lòng nhập email và password';
+                status.className = 'status error';
+                return;
+            }
+
+            if (!localDatabase) {
+                status.innerHTML = '❌ Database chưa load';
+                status.className = 'status error';
+                return;
+            }
+
+            const user = localDatabase.users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                status.innerHTML = `✅ Login thành công: ${user.name}`;
+                status.className = 'status success';
+            } else {
+                status.innerHTML = '❌ Email hoặc password không đúng';
+                status.className = 'status error';
+            }
+        }
+
+        // Setup form handler
+        document.getElementById('testRegForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            testRegister();
+        });
+
+        // Auto-load database and show info
+        setTimeout(() => {
+            loadDB();
+            showLocalStorage();
+        }, 500);
+
+        // Auto-refresh every 3 seconds
+        setInterval(() => {
+            showLocalStorage();
+        }, 3000);
+    </script>
+</body>
+</html>

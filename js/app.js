@@ -59,17 +59,68 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Load database from JSON file
 async function loadDatabase() {
     try {
+        // First, try to load from localStorage (for updated data)
+        const savedDatabase = localStorage.getItem('database');
+        if (savedDatabase) {
+            try {
+                const localDb = JSON.parse(savedDatabase);
+                console.log('Found database in localStorage, using it');
+                database = localDb;
+                
+                // Validate structure
+                if (database.users && database.products && database.categories) {
+                    console.log('Database loaded from localStorage successfully');
+                    console.log('Users in localStorage database:', database.users.length);
+                    console.log('User list:', database.users.map(u => ({ id: u.id, name: u.name, email: u.email })));
+                    return; // Use localStorage data
+                }
+            } catch (e) {
+                console.error('Error parsing localStorage database:', e);
+                localStorage.removeItem('database');
+            }
+        }
+        
+        // Try to restore from users backup if main database failed
+        const usersBackup = localStorage.getItem('users_backup');
+        if (usersBackup) {
+            try {
+                const users = JSON.parse(usersBackup);
+                console.log('Found users backup, will merge with JSON data');
+                
+                // Load base structure from JSON and merge users
+                const response = await fetch('data/database.json');
+                if (response.ok) {
+                    const baseDb = await response.json();
+                    baseDb.users = users; // Use backed up users
+                    database = baseDb;
+                    
+                    // Save merged database
+                    localStorage.setItem('database', JSON.stringify(database));
+                    console.log('Database restored from backup and JSON merge');
+                    return;
+                }
+            } catch (e) {
+                console.error('Error restoring from backup:', e);
+            }
+        }
+        
+        // If no localStorage data, load from JSON file
+        console.log('Loading database from JSON file...');
         const response = await fetch('data/database.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         database = await response.json();
-        console.log('Database loaded successfully', database);
+        console.log('Database loaded from JSON file successfully', database);
         
         // Validate database structure
         if (!database.users || !database.products || !database.categories) {
             throw new Error('Invalid database structure');
         }
+        
+        // Save to localStorage for future use
+        localStorage.setItem('database', JSON.stringify(database));
+        console.log('Database saved to localStorage for future use');
         
     } catch (error) {
         console.error('Error loading database:', error);
@@ -112,7 +163,9 @@ async function loadDatabase() {
             order_details: []
         };
         
-        console.log('Using fallback database:', database);
+        // Save fallback data to localStorage
+        localStorage.setItem('database', JSON.stringify(database));
+        console.log('Using fallback database and saved to localStorage:', database);
     }
 }
 

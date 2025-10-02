@@ -185,15 +185,41 @@ async function handleRegister(e) {
         
         // Add to database
         database.users.push(newUser);
+        console.log('User added to database array');
         
         // Update global database reference
         window.database = database;
         
-        // Save to localStorage as backup
-        localStorage.setItem('database', JSON.stringify(database));
+        // Save to localStorage with multiple methods for reliability
+        try {
+            localStorage.setItem('database', JSON.stringify(database));
+            console.log('Database saved to localStorage successfully');
+            
+            // Also save just the users array as backup
+            localStorage.setItem('users_backup', JSON.stringify(database.users));
+            console.log('Users backup saved to localStorage');
+            
+            // Verify the save worked
+            const verifyDb = localStorage.getItem('database');
+            if (verifyDb) {
+                const parsedDb = JSON.parse(verifyDb);
+                const userExists = parsedDb.users.find(u => u.email === newUser.email);
+                if (userExists) {
+                    console.log('✅ Verification successful: New user found in saved database');
+                } else {
+                    console.error('❌ Verification failed: New user NOT found in saved database');
+                }
+            }
+            
+        } catch (saveError) {
+            console.error('Error saving to localStorage:', saveError);
+            showAuthNotification('Lỗi lưu dữ liệu! Vui lòng thử lại.', 'error');
+            return;
+        }
         
         console.log('New user created:', newUser);
-        console.log('Updated database users:', database.users.length);
+        console.log('Updated database users count:', database.users.length);
+        console.log('All users in database:', database.users.map(u => ({ id: u.id, name: u.name, email: u.email })));
         
         showAuthNotification('Đăng ký thành công! Đang chuyển đến trang đăng nhập...', 'success');
         
