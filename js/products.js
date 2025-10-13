@@ -175,7 +175,10 @@ function displayProducts() {
         return `
             <div class="product-card">
                 <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}" onclick="viewProductDetail(${product.id})">
+                    <img src="${window.getSafeImageUrl ? window.getSafeImageUrl(product.image, product.name) : product.image}" 
+                         alt="${product.name}" 
+                         onclick="viewProductDetail(${product.id})"
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNTAgMTAwQzE2NS40NjQgMTAwIDE3Ny41IDEyMi4wOTQgMTc3LjUgMTUwQzE3Ny41IDE3Ny45MDYgMTY1LjQ2NCAyMDAgMTUwIDIwMEMxMzQuNTM2IDIwMCAxMjIuNSAxNzcuOTA2IDEyMi41IDE1MEMxMjIuNSAxMjIuMDk0IDEzNC41MzYgMTAwIDE1MCAxMDBaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxwYXRoIGQ9Ik0xNTAgMTIwQzE1OC4yODQgMTIwIDE2NSAxMzYuNzE2IDE2NSAxNTBDMTY1IDE2My4yODQgMTU4LjI4NCAxNzAgMTUwIDE3MEMxNDEuNzE2IDE3MCAxMzUgMTYzLjI4NCAxMzUgMTUwQzEzNSAxMzYuNzE2IDE0MS43MTYgMTIwIDE1MCAxMjBaIiBmaWxsPSIjOTk5OTk5Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5OTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
                     ${stock === 0 ? '<div class="out-of-stock">Hết hàng</div>' : ''}
                 </div>
                 <div class="product-info">

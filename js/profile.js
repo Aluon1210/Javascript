@@ -649,7 +649,9 @@ function loadUserOrders() {
                 <div class="order-products">
                     ${orderProducts.map(item => `
                         <div class="order-product">
-                            <img src="${item.product?.image || 'https://via.placeholder.com/60x60'}" alt="${item.product?.name || 'Sản phẩm'}">
+                            <img src="${window.getSafeImageUrl ? window.getSafeImageUrl(item.product?.image, item.product?.name) : (item.product?.image || 'https://via.placeholder.com/60x60')}" 
+                                 alt="${item.product?.name || 'Sản phẩm'}"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0zMCAxNUMzNy4xODQgMTUgNDMgMjAuODE2IDQzIDI4QzQzIDM1LjE4NCAzNy4xODQgNDEgMzAgNDFDMjIuODE2IDQxIDE3IDM1LjE4NCAxNyAyOEMxNyAyMC44MTYgMjIuODE2IDE1IDMwIDE1WiIgZmlsbD0iI0NDQ0NDQyIvPgo8cGF0aCBkPSJNMzAgMjVDMzIuNzYxIDI1IDM1IDI3LjIzOSAzNSAzMEMzNSAzMi43NjEgMzIuNzYxIDM1IDMwIDM1QzI3LjIzOSAzNSAyNSAzMi43NjEgMjUgMzBDMjUgMjcuMjM5IDI3LjIzOSAyNSAzMCAyNVoiIGZpbGw9IiM5OTk5OTkiLz4KPHN0eWxlPgo8IVtDREFUQVsKdGV4dCB7IGZvbnQtZmFtaWx5OiBBcmlhbDsgZm9udC1zaXplOiA4cHg7IGZpbGw6ICM5OTk5OTk7IHRleHQtYW5jaG9yOiBtaWRkbGU7IH0KXV0+Cjwvc3R5bGU+Cjx0ZXh0IHg9IjMwIiB5PSI1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
                             <div class="order-product-info">
                                 <h5>${item.product?.name || 'Sản phẩm không xác định'}</h5>
                                 <p>${item.variant?.variant_name || 'Phiên bản mặc định'} x ${item.quantity}</p>

@@ -195,7 +195,9 @@ function loadProducts() {
         return `
             <tr>
                 <td>${product.id}</td>
-                <td><img src="${product.image}" alt="${product.name}"></td>
+                <td><img src="${window.getSafeImageUrl ? window.getSafeImageUrl(product.image, product.name) : product.image}" 
+                         alt="${product.name}"
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yNSAxMkMzMS42MjcgMTIgMzcgMTcuMzczIDM3IDI0QzM3IDMwLjYyNyAzMS42MjcgMzYgMjUgMzZDMTAuMzczIDM2IDE5IDMwLjYyNyAxOSAyNEMxOSAxNy4zNzMgMTguMzczIDEyIDI1IDEyWiIgZmlsbD0iI0NDQ0NDQyIvPgo8cGF0aCBkPSJNMjUgMjBDMjcuNzYxIDIwIDMwIDIyLjIzOSAzMCAyNUMzMCAyNy43NjEgMjcuNzYxIDMwIDI1IDMwQzIyLjIzOSAzMCAyMCAyNy43NjEgMjAgMjVDMjAgMjIuMjM5IDIyLjIzOSAyMCAyNSAyMFoiIGZpbGw9IiM5OTk5OTkiLz4KPHN0eWxlPgo8IVtDREFUQVsKdGV4dCB7IGZvbnQtZmFtaWx5OiBBcmlhbDsgZm9udC1zaXplOiA2cHg7IGZpbGw6ICM5OTk5OTk7IHRleHQtYW5jaG9yOiBtaWRkbGU7IH0KXV0+Cjwvc3R5bGU+Cjx0ZXh0IHg9IjI1IiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='"></td>
                 <td>
                     <strong>${product.name}</strong><br>
                     <small class="text-muted">${product.detail.substring(0, 50)}...</small>
