@@ -1,118 +1,134 @@
-// New Profile Page JavaScript - Clean and Simple
-console.log('Profile-new.js loaded');
+// Modern Profile JavaScript - Clean, Simple, and Beautiful
+console.log('Profile Modern JS loaded');
 
+// Global variables
 let isEditMode = false;
 let originalFormData = {};
 
-// Initialize profile page
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Profile page DOM loaded');
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing Modern Profile...');
     
-    try {
-        // Load user and database
-        await loadUserAndDatabase();
-        
-        // Initialize profile
-        initializeProfile();
-        
-    } catch (error) {
-        console.error('Error initializing profile page:', error);
-        showNotification('Lỗi tải trang! Vui lòng thử lại.', 'error');
-    }
-});
-
-// Load user and database
-async function loadUserAndDatabase() {
-    // Load user from localStorage
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        try {
-            currentUser = JSON.parse(savedUser);
-            console.log('User loaded:', currentUser);
-        } catch (e) {
-            console.error('Error parsing user:', e);
-            throw new Error('Invalid user data');
-        }
-    } else {
-        throw new Error('No user found');
-    }
-    
-    // Load database from localStorage
-    const savedDatabase = localStorage.getItem('database');
-    if (savedDatabase) {
-        try {
-            database = JSON.parse(savedDatabase);
-            console.log('Database loaded from localStorage');
-        } catch (e) {
-            console.error('Error parsing database:', e);
-        }
-    }
-    
-    // If database not loaded, try to load from JSON
-    if (!database) {
-        try {
-            const response = await fetch('data/database.json');
-            if (response.ok) {
-                database = await response.json();
-                localStorage.setItem('database', JSON.stringify(database));
-                console.log('Database loaded from JSON file');
-            }
-        } catch (e) {
-            console.error('Error loading database from JSON:', e);
-        }
-    }
-    
-    if (!database) {
-        throw new Error('Database not available');
-    }
-}
-
-// Initialize profile
-function initializeProfile() {
-    if (!currentUser) {
-        showNotification('Vui lòng đăng nhập để xem thông tin cá nhân!', 'error');
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 3000);
+    // Check if user is logged in
+    if (!checkUserLogin()) {
+        redirectToLogin();
         return;
     }
     
-    console.log('Initializing profile for:', currentUser);
-    
-    // Load user profile
-    loadUserProfile();
+    // Load user data
+    loadUserData();
     
     // Setup event listeners
     setupEventListeners();
     
     // Load default tab
-    showProfileTab('info');
+    showTab('info');
+    
+    console.log('✅ Profile initialized successfully');
+});
+
+// Check if user is logged in
+function checkUserLogin() {
+    const savedUser = localStorage.getItem('currentUser');
+    if (!savedUser) {
+        console.log('❌ No user found');
+        return false;
+    }
+    
+    try {
+        currentUser = JSON.parse(savedUser);
+        console.log('✅ User loaded:', currentUser.name);
+        return true;
+    } catch (error) {
+        console.error('❌ Error parsing user data:', error);
+        return false;
+    }
 }
 
-// Load user profile data
-function loadUserProfile() {
-    if (!currentUser) return;
+// Redirect to login page
+function redirectToLogin() {
+    showNotification('Vui lòng đăng nhập để xem thông tin cá nhân!', 'error');
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 2000);
+}
+
+// Load user data
+async function loadUserData() {
+    console.log('📊 Loading user data...');
     
-    console.log('Loading user profile...');
+    try {
+        // Load database
+        await loadDatabase();
+        
+        // Update UI
+        updateUserInterface();
+        
+        // Load profile data
+        loadProfileData();
+        
+        console.log('✅ User data loaded successfully');
+    } catch (error) {
+        console.error('❌ Error loading user data:', error);
+        showNotification('Lỗi tải dữ liệu! Vui lòng thử lại.', 'error');
+    }
+}
+
+// Load database
+async function loadDatabase() {
+    // Try localStorage first
+    const savedDatabase = localStorage.getItem('database');
+    if (savedDatabase) {
+        try {
+            database = JSON.parse(savedDatabase);
+            console.log('✅ Database loaded from localStorage');
+            return;
+        } catch (error) {
+            console.error('❌ Error parsing localStorage database:', error);
+        }
+    }
     
+    // Try JSON file
+    try {
+        const response = await fetch('data/database.json');
+        if (response.ok) {
+            database = await response.json();
+            localStorage.setItem('database', JSON.stringify(database));
+            console.log('✅ Database loaded from JSON file');
+        } else {
+            throw new Error('Failed to load database from JSON');
+        }
+    } catch (error) {
+        console.error('❌ Error loading database:', error);
+        throw error;
+    }
+}
+
+// Update user interface
+function updateUserInterface() {
     // Update sidebar
     const profileNameEl = document.getElementById('profileName');
     const profileRoleEl = document.getElementById('profileRole');
     
-    if (profileNameEl) profileNameEl.textContent = currentUser.name || 'Người dùng';
-    if (profileRoleEl) profileRoleEl.textContent = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+    if (profileNameEl) {
+        profileNameEl.textContent = currentUser.name || 'Người dùng';
+    }
     
-    // Update form fields
-    updateFormFields();
+    if (profileRoleEl) {
+        profileRoleEl.textContent = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+    }
     
-    // Store original data
-    storeOriginalData();
-    
-    console.log('User profile loaded successfully');
+    // Update header username
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) {
+        userNameEl.textContent = currentUser.name || 'Người dùng';
+    }
 }
 
-// Update form fields
-function updateFormFields() {
+// Load profile data
+function loadProfileData() {
+    console.log('👤 Loading profile data...');
+    
     const fields = {
         'fullName': currentUser.name || '',
         'email': currentUser.email || '',
@@ -122,6 +138,7 @@ function updateFormFields() {
         'gender': currentUser.gender || ''
     };
     
+    // Update form fields
     Object.entries(fields).forEach(([fieldId, value]) => {
         const element = document.getElementById(fieldId);
         if (element) {
@@ -137,21 +154,26 @@ function updateFormFields() {
             'Không xác định';
         joinDateEl.value = joinDate;
     }
-}
-
-// Store original form data
-function storeOriginalData() {
-    originalFormData = {
-        name: currentUser.name || '',
-        phone: currentUser.phone || '',
-        address: currentUser.address || '',
-        birthDate: currentUser.birthDate || '',
-        gender: currentUser.gender || ''
-    };
+    
+    // Store original data
+    originalFormData = { ...fields };
+    
+    console.log('✅ Profile data loaded');
 }
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log('🎧 Setting up event listeners...');
+    
+    // Navigation tabs
+    document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabName = this.getAttribute('data-tab');
+            showTab(tabName);
+        });
+    });
+    
     // Edit button
     const editBtn = document.getElementById('editBtn');
     if (editBtn) {
@@ -176,12 +198,49 @@ function setupEventListeners() {
         changePasswordForm.addEventListener('submit', handleChangePassword);
     }
     
-    console.log('Event listeners setup completed');
+    console.log('✅ Event listeners setup completed');
+}
+
+// Show tab
+function showTab(tabName) {
+    console.log('📑 Showing tab:', tabName);
+    
+    // Hide all tabs
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const selectedTab = document.getElementById(`${tabName}-tab`);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+    
+    // Add active class to nav item
+    const navItem = document.querySelector(`[data-tab="${tabName}"]`);
+    if (navItem) {
+        navItem.classList.add('active');
+    }
+    
+    // Load tab content
+    switch (tabName) {
+        case 'orders':
+            loadOrders();
+            break;
+        case 'addresses':
+            loadAddresses();
+            break;
+    }
 }
 
 // Toggle edit mode
 function toggleEditMode() {
-    console.log('Toggle edit mode, current:', isEditMode);
+    console.log('✏️ Toggle edit mode, current:', isEditMode);
     
     isEditMode = !isEditMode;
     
@@ -193,7 +252,7 @@ function toggleEditMode() {
         // Enable edit mode
         if (editBtn) {
             editBtn.innerHTML = '<i class="fas fa-times"></i> Hủy';
-            editBtn.className = 'btn btn-secondary';
+            editBtn.className = 'edit-btn';
         }
         
         if (formActions) {
@@ -208,7 +267,7 @@ function toggleEditMode() {
             }
         });
         
-        console.log('Edit mode enabled');
+        console.log('✅ Edit mode enabled');
     } else {
         // Disable edit mode
         cancelEdit();
@@ -217,7 +276,7 @@ function toggleEditMode() {
 
 // Cancel edit
 function cancelEdit() {
-    console.log('Cancel edit');
+    console.log('❌ Cancel edit');
     
     isEditMode = false;
     
@@ -227,7 +286,7 @@ function cancelEdit() {
     
     if (editBtn) {
         editBtn.innerHTML = '<i class="fas fa-edit"></i> Chỉnh sửa';
-        editBtn.className = 'btn btn-primary';
+        editBtn.className = 'edit-btn';
     }
     
     if (formActions) {
@@ -245,30 +304,26 @@ function cancelEdit() {
     // Restore original data
     restoreOriginalData();
     
-    console.log('Edit mode cancelled');
+    console.log('✅ Edit mode cancelled');
 }
 
 // Restore original data
 function restoreOriginalData() {
     if (originalFormData) {
-        const fullNameEl = document.getElementById('fullName');
-        const phoneEl = document.getElementById('phone');
-        const addressEl = document.getElementById('address');
-        const birthDateEl = document.getElementById('birthDate');
-        const genderEl = document.getElementById('gender');
-        
-        if (fullNameEl) fullNameEl.value = originalFormData.name || '';
-        if (phoneEl) phoneEl.value = originalFormData.phone || '';
-        if (addressEl) addressEl.value = originalFormData.address || '';
-        if (birthDateEl) birthDateEl.value = originalFormData.birthDate || '';
-        if (genderEl) genderEl.value = originalFormData.gender || '';
+        const fields = ['fullName', 'phone', 'address', 'birthDate', 'gender'];
+        fields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.value = originalFormData[fieldId] || '';
+            }
+        });
     }
 }
 
 // Handle profile update
 function handleProfileUpdate(e) {
     e.preventDefault();
-    console.log('Profile update submitted');
+    console.log('💾 Profile update submitted');
     
     try {
         const formData = new FormData(e.target);
@@ -280,7 +335,7 @@ function handleProfileUpdate(e) {
             gender: formData.get('gender') || ''
         };
         
-        console.log('Updated data:', updatedData);
+        console.log('📝 Updated data:', updatedData);
         
         // Validation
         if (!updatedData.name) {
@@ -306,20 +361,16 @@ function handleProfileUpdate(e) {
             if (userIndex !== -1) {
                 database.users[userIndex] = { ...database.users[userIndex], ...currentUser };
                 localStorage.setItem('database', JSON.stringify(database));
-                console.log('Database updated');
+                console.log('✅ Database updated');
             }
         }
         
         // Update localStorage
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        console.log('localStorage updated');
+        console.log('✅ localStorage updated');
         
         // Update UI
-        const profileNameEl = document.getElementById('profileName');
-        const userNameEl = document.getElementById('userName');
-        
-        if (profileNameEl) profileNameEl.textContent = currentUser.name;
-        if (userNameEl) userNameEl.textContent = currentUser.name;
+        updateUserInterface();
         
         // Store new original data
         originalFormData = { ...updatedData };
@@ -328,54 +379,17 @@ function handleProfileUpdate(e) {
         cancelEdit();
         
         showNotification('Cập nhật thông tin thành công!', 'success');
-        console.log('Profile update completed successfully');
+        console.log('✅ Profile update completed successfully');
         
     } catch (error) {
-        console.error('Error updating profile:', error);
+        console.error('❌ Error updating profile:', error);
         showNotification('Lỗi cập nhật thông tin! Vui lòng thử lại.', 'error');
     }
 }
 
-// Show profile tab
-function showProfileTab(tabName) {
-    console.log('Showing tab:', tabName);
-    
-    // Hide all tabs
-    document.querySelectorAll('.profile-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    // Remove active class from nav items
-    document.querySelectorAll('.profile-nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Show selected tab
-    const selectedTab = document.getElementById(`${tabName}-tab`);
-    if (selectedTab) {
-        selectedTab.classList.add('active');
-    }
-    
-    // Add active class to nav item
-    const navItem = document.querySelector(`[data-tab="${tabName}"]`);
-    if (navItem) {
-        navItem.classList.add('active');
-    }
-    
-    // Load tab-specific content
-    switch (tabName) {
-        case 'orders':
-            loadUserOrders();
-            break;
-        case 'addresses':
-            loadUserAddresses();
-            break;
-    }
-}
-
-// Load user orders
-function loadUserOrders() {
-    console.log('Loading user orders...');
+// Load orders
+function loadOrders() {
+    console.log('📦 Loading orders...');
     
     const ordersList = document.getElementById('ordersList');
     if (!ordersList) return;
@@ -392,7 +406,7 @@ function loadUserOrders() {
     if (userOrders.length === 0) {
         ordersList.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-shopping-bag" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <i class="fas fa-shopping-bag"></i>
                 <h3>Chưa có đơn hàng nào</h3>
                 <p>Bạn chưa có đơn hàng nào. Hãy bắt đầu mua sắm!</p>
                 <a href="products.html" class="btn btn-primary">Mua sắm ngay</a>
@@ -450,17 +464,17 @@ function loadUserOrders() {
         `;
     }).join('');
     
-    console.log('User orders loaded:', userOrders.length);
+    console.log('✅ Orders loaded:', userOrders.length);
 }
 
-// Load user addresses
-function loadUserAddresses() {
-    console.log('Loading user addresses...');
+// Load addresses
+function loadAddresses() {
+    console.log('📍 Loading addresses...');
     
     const addressesList = document.getElementById('addressesList');
     if (!addressesList) return;
     
-    // For demo, create sample address
+    // Sample address
     const sampleAddresses = [
         {
             id: 1,
@@ -475,10 +489,10 @@ function loadUserAddresses() {
     if (sampleAddresses.length === 0) {
         addressesList.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <i class="fas fa-map-marker-alt"></i>
                 <h3>Chưa có địa chỉ giao hàng</h3>
                 <p>Thêm địa chỉ để thuận tiện cho việc giao hàng</p>
-                <button onclick="showAddAddressModal()" class="btn btn-primary">Thêm địa chỉ</button>
+                <button class="btn btn-primary" onclick="showAddAddressModal()">Thêm địa chỉ</button>
             </div>
         `;
         return;
@@ -494,18 +508,20 @@ function loadUserAddresses() {
                 <p><i class="fas fa-map-marker-alt"></i> ${address.address}</p>
             </div>
             <div class="address-actions">
-                <button onclick="editAddress(${address.id})" class="btn btn-sm btn-secondary">
+                <button class="btn btn-secondary" onclick="editAddress(${address.id})">
                     <i class="fas fa-edit"></i> Sửa
                 </button>
-                ${!address.isDefault ? `<button onclick="deleteAddress(${address.id})" class="btn btn-sm btn-danger">
+                ${!address.isDefault ? `<button class="btn btn-danger" onclick="deleteAddress(${address.id})">
                     <i class="fas fa-trash"></i> Xóa
                 </button>` : ''}
-                ${!address.isDefault ? `<button onclick="setDefaultAddress(${address.id})" class="btn btn-sm btn-primary">
+                ${!address.isDefault ? `<button class="btn btn-primary" onclick="setDefaultAddress(${address.id})">
                     Đặt làm mặc định
                 </button>` : ''}
             </div>
         </div>
     `).join('');
+    
+    console.log('✅ Addresses loaded');
 }
 
 // Filter orders
@@ -555,7 +571,7 @@ function showChangePasswordModal() {
 
 function handleChangePassword(e) {
     e.preventDefault();
-    console.log('Change password submitted');
+    console.log('🔐 Change password submitted');
     
     const currentPassword = document.getElementById('currentPassword')?.value || '';
     const newPassword = document.getElementById('newPassword')?.value || '';
@@ -715,7 +731,7 @@ function showNotification(message, type = 'info') {
 }
 
 // Make functions available globally
-window.showProfileTab = showProfileTab;
+window.showTab = showTab;
 window.toggleEditMode = toggleEditMode;
 window.cancelEdit = cancelEdit;
 window.filterOrders = filterOrders;
@@ -727,4 +743,4 @@ window.showChangePasswordModal = showChangePasswordModal;
 window.closeModal = closeModal;
 window.showNotification = showNotification;
 
-console.log('Profile-new.js setup completed');
+console.log('🎉 Profile Modern JS setup completed');

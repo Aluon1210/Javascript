@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin cá nhân - Susan Shop</title>
+    <title>Test Profile Modern - Susan Shop</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/image-fixes.css">
@@ -471,6 +471,27 @@
             margin: 0 0 2rem 0;
         }
 
+        /* Test Info */
+        .test-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .test-info h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+        }
+
+        .test-info p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .profile-container {
@@ -505,43 +526,9 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1><a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-store"></i> Susan Shop</a></h1>
-                </div>
-                <nav class="nav">
-                    <ul>
-                        <li><a href="index.html">Trang chủ</a></li>
-                        <li><a href="products.html">Sản phẩm</a></li>
-                        <li><a href="categories.html">Danh mục</a></li>
-                        <li><a href="contact.html">Liên hệ</a></li>
-                    </ul>
-                </nav>
-                <div class="header-actions">
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
-                        <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
-                    </div>
-                    <div class="user-actions">
-                        <button id="loginBtn" onclick="window.location.href='login.html'" class="hidden"><i class="fas fa-user"></i> Đăng nhập</button>
-                        <button id="userProfile" onclick="showUserMenu()"><i class="fas fa-user-circle"></i> <span id="userName"></span></button>
-                        <button onclick="window.location.href='cart.html'"><i class="fas fa-shopping-cart"></i> Giỏ hàng (<span id="cartCount">0</span>)</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-        <div class="container">
-            <nav>
-                <a href="index.html">Trang chủ</a> > <span>Thông tin cá nhân</span>
-            </nav>
-        </div>
+    <div class="test-info">
+        <h1>🎉 Profile Modern Design</h1>
+        <p>Thiết kế mới hoàn toàn với giao diện hiện đại và trải nghiệm người dùng tốt hơn</p>
     </div>
 
     <!-- Profile Section -->
@@ -554,7 +541,7 @@
                         <div class="avatar-circle">
                             <i class="fas fa-user"></i>
                         </div>
-                        <div class="profile-name" id="profileName">Tên người dùng</div>
+                        <div class="profile-name" id="profileName">Test User</div>
                         <div class="profile-role" id="profileRole">Khách hàng</div>
                     </div>
                     
@@ -753,35 +740,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Susan Shop</h3>
-                    <p>Cửa hàng thời trang uy tín với nhiều năm kinh nghiệm</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Liên hệ</h3>
-                    <p><i class="fas fa-phone"></i> 0123 456 789</p>
-                    <p><i class="fas fa-envelope"></i> info@susanshop.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, TP.HCM</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Theo dõi chúng tôi</h3>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Susan Shop. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <!-- Change Password Modal -->
     <div id="changePasswordModal" class="modal">
         <div class="modal-content">
@@ -809,8 +767,123 @@
     </div>
 
     <script src="js/image-handler.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/user-menu.js"></script>
     <script src="js/profile-modern.js"></script>
+    <script>
+        // Create test user data
+        const testUser = {
+            id: 1,
+            name: 'Nguyễn Văn Modern',
+            email: 'modern@example.com',
+            phone: '0123456789',
+            address: '123 Đường Modern, Quận 1, TP.HCM',
+            birthDate: '1990-01-01',
+            gender: 'male',
+            role: 'customer',
+            password: '123456',
+            created_at: '2024-01-01T00:00:00.000Z'
+        };
+
+        // Create test orders
+        const testOrders = [
+            {
+                id: 1,
+                user_id: 1,
+                created_date: '2024-01-15T10:30:00.000Z',
+                status: 'completed',
+                total_amount: 299000
+            },
+            {
+                id: 2,
+                user_id: 1,
+                created_date: '2024-01-20T14:20:00.000Z',
+                status: 'shipping',
+                total_amount: 450000
+            },
+            {
+                id: 3,
+                user_id: 1,
+                created_date: '2024-01-25T09:15:00.000Z',
+                status: 'pending',
+                total_amount: 199000
+            }
+        ];
+
+        const testOrderDetails = [
+            {
+                id: 1,
+                order_id: 1,
+                product_id: 1,
+                variant_id: 1,
+                quantity: 1,
+                unit_price: 299000
+            },
+            {
+                id: 2,
+                order_id: 2,
+                product_id: 2,
+                variant_id: 4,
+                quantity: 1,
+                unit_price: 450000
+            },
+            {
+                id: 3,
+                order_id: 3,
+                product_id: 3,
+                variant_id: 6,
+                quantity: 1,
+                unit_price: 199000
+            }
+        ];
+
+        // Set global variables
+        window.currentUser = testUser;
+        window.database = {
+            users: [testUser],
+            products: [
+                {
+                    id: 1,
+                    name: 'Áo sơ mi trắng công sở',
+                    image: 'https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang'
+                },
+                {
+                    id: 2,
+                    name: 'Váy đầm hoa nhí',
+                    image: 'https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa'
+                },
+                {
+                    id: 3,
+                    name: 'Áo thun polo nam',
+                    image: 'https://via.placeholder.com/300x300/4ecdc4/ffffff?text=Ao+Thun+Polo'
+                }
+            ],
+            categories: [],
+            orders: testOrders,
+            order_details: testOrderDetails,
+            product_variants: [
+                {
+                    id: 1,
+                    product_id: 1,
+                    variant_name: 'Size M - Trắng'
+                },
+                {
+                    id: 4,
+                    product_id: 2,
+                    variant_name: 'Size S - Hoa nhí xanh'
+                },
+                {
+                    id: 6,
+                    product_id: 3,
+                    variant_name: 'Size M - Xanh navy'
+                }
+            ]
+        };
+
+        // Initialize test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎉 Test Profile Modern page loaded');
+            console.log('👤 Test user:', testUser);
+            console.log('📦 Test orders:', testOrders);
+        });
+    </script>
 </body>
 </html>
