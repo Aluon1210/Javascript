@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/image-fixes.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #007bff;
+        }
+        .test-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        .test-info p {
+            margin: 0;
+            color: #666;
+        }
+        .admin-link {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        .admin-link:hover {
+            background: #0056b3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding: 2rem;">
+        <h1>Test Admin Panel - Susan Shop</h1>
+        
+        <div class="test-info">
+            <h3>🔐 Admin Access Required</h3>
+            <p>Để truy cập phần admin, bạn cần đăng nhập với tài khoản có quyền admin.</p>
+        </div>
+
+        <div class="test-info">
+            <h3>📋 Admin Features</h3>
+            <p>Phần admin bao gồm: Dashboard, Quản lý danh mục, Quản lý sản phẩm, Quản lý khách hàng, Quản lý đơn hàng, và Thống kê.</p>
+        </div>
+
+        <a href="admin.html" class="admin-link">
+            <i class="fas fa-cog"></i> Truy cập Admin Panel
+        </a>
+
+        <div class="test-info">
+            <h3>🧪 Test Admin Functions</h3>
+            <p>Nếu bạn chưa có tài khoản admin, hãy tạo một tài khoản test với role: 'admin' trong database.</p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <h3>Test Data Setup:</h3>
+            <pre style="background: #f8f9fa; padding: 1rem; border-radius: 8px; overflow-x: auto;">
+// Tạo tài khoản admin test
+const adminUser = {
+    id: 999,
+    name: 'Admin User',
+    email: 'admin@test.com',
+    password: '123456',
+    role: 'admin',
+    phone: '0123456789',
+    address: 'Admin Address',
+    created_at: new Date().toISOString()
+};
+
+// Thêm vào database.users
+database.users.push(adminUser);
+localStorage.setItem('database', JSON.stringify(database));
+            </pre>
+        </div>
+    </div>
+
+    <script src="js/image-handler.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // Tạo admin user test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Setting up admin test...');
+            
+            // Tạo admin user
+            const adminUser = {
+                id: 999,
+                name: 'Admin User',
+                email: 'admin@test.com',
+                password: '123456',
+                role: 'admin',
+                phone: '0123456789',
+                address: 'Admin Address',
+                created_at: new Date().toISOString()
+            };
+            
+            // Load database
+            fetch('data/database.json')
+                .then(response => response.json())
+                .then(db => {
+                    // Thêm admin user nếu chưa có
+                    const existingAdmin = db.users.find(u => u.role === 'admin');
+                    if (!existingAdmin) {
+                        db.users.push(adminUser);
+                        localStorage.setItem('database', JSON.stringify(db));
+                        console.log('Admin user created');
+                    }
+                    
+                    // Set current user as admin
+                    window.currentUser = adminUser;
+                    localStorage.setItem('currentUser', JSON.stringify(adminUser));
+                    console.log('Admin user set as current user');
+                })
+                .catch(error => {
+                    console.error('Error setting up admin:', error);
+                });
+        });
+    </script>
+</body>
+</html>
