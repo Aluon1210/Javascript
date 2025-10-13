@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Profile New - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/image-fixes.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .test-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .test-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        .test-info p {
+            margin: 0;
+            color: #666;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .success h3 {
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Test Profile New - Susan Shop</h1>
+        
+        <div class="test-section success">
+            <h2>✅ Profile New Features</h2>
+            <div class="test-info">
+                <h3>🔄 Completely Rewritten</h3>
+                <p>Phần chỉnh sửa thông tin cá nhân và đơn hàng đã được viết lại hoàn toàn với code sạch và đơn giản hơn.</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Test Instructions</h2>
+            <div class="test-info">
+                <h3>Steps to test:</h3>
+                <p>1. Click "Chỉnh sửa" button to enter edit mode</p>
+                <p>2. Modify some fields (name, phone, address, etc.)</p>
+                <p>3. Click "Lưu thay đổi" to save or "Hủy" to cancel</p>
+                <p>4. Test "Đơn hàng của tôi" tab</p>
+                <p>5. Check console for debug messages</p>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <div class="container">
+                <div class="profile-container">
+                    <!-- Sidebar -->
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 id="profileName">Test User</h3>
+                            <p id="profileRole">Khách hàng</p>
+                        </div>
+                        
+                        <nav class="profile-nav">
+                            <a href="#" onclick="showProfileTab('info')" class="profile-nav-item active" data-tab="info">
+                                <i class="fas fa-user"></i>
+                                <span>Thông tin cá nhân</span>
+                            </a>
+                            <a href="#" onclick="showProfileTab('orders')" class="profile-nav-item" data-tab="orders">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Đơn hàng của tôi</span>
+                            </a>
+                            <a href="#" onclick="showProfileTab('addresses')" class="profile-nav-item" data-tab="addresses">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Địa chỉ giao hàng</span>
+                            </a>
+                            <a href="#" onclick="showProfileTab('security')" class="profile-nav-item" data-tab="security">
+                                <i class="fas fa-lock"></i>
+                                <span>Bảo mật</span>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="profile-content">
+                        <!-- Personal Info Tab -->
+                        <div id="info-tab" class="profile-tab active">
+                            <div class="tab-header">
+                                <h2>Thông tin cá nhân</h2>
+                                <button class="btn btn-primary" id="editBtn">
+                                    <i class="fas fa-edit"></i> Chỉnh sửa
+                                </button>
+                            </div>
+
+                            <div class="profile-form">
+                                <form id="profileForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="fullName">
+                                                <i class="fas fa-user"></i>
+                                                Họ và tên
+                                            </label>
+                                            <input type="text" id="fullName" name="fullName" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">
+                                                <i class="fas fa-envelope"></i>
+                                                Email
+                                            </label>
+                                            <input type="email" id="email" name="email" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="phone">
+                                                <i class="fas fa-phone"></i>
+                                                Số điện thoại
+                                            </label>
+                                            <input type="tel" id="phone" name="phone" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="birthDate">
+                                                <i class="fas fa-birthday-cake"></i>
+                                                Ngày sinh
+                                            </label>
+                                            <input type="date" id="birthDate" name="birthDate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Địa chỉ
+                                        </label>
+                                        <textarea id="address" name="address" rows="3" readonly></textarea>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="gender">
+                                                <i class="fas fa-venus-mars"></i>
+                                                Giới tính
+                                            </label>
+                                            <select id="gender" name="gender" disabled>
+                                                <option value="">Chọn giới tính</option>
+                                                <option value="male">Nam</option>
+                                                <option value="female">Nữ</option>
+                                                <option value="other">Khác</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="joinDate">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Ngày tham gia
+                                            </label>
+                                            <input type="text" id="joinDate" name="joinDate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions hidden" id="formActions">
+                                        <button type="button" class="btn btn-secondary" id="cancelBtn">
+                                            <i class="fas fa-times"></i> Hủy
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Orders Tab -->
+                        <div id="orders-tab" class="profile-tab">
+                            <div class="tab-header">
+                                <h2>Đơn hàng của tôi</h2>
+                                <div class="order-filters">
+                                    <select id="orderStatusFilter" onchange="filterOrders()">
+                                        <option value="">Tất cả đơn hàng</option>
+                                        <option value="pending">Chờ xử lý</option>
+                                        <option value="processing">Đang xử lý</option>
+                                        <option value="shipping">Đang giao hàng</option>
+                                        <option value="completed">Hoàn thành</option>
+                                        <option value="cancelled">Đã hủy</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="orders-list" id="ordersList">
+                                <!-- Orders will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Addresses Tab -->
+                        <div id="addresses-tab" class="profile-tab">
+                            <div class="tab-header">
+                                <h2>Địa chỉ giao hàng</h2>
+                                <button onclick="showAddAddressModal()" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Thêm địa chỉ
+                                </button>
+                            </div>
+
+                            <div class="addresses-list" id="addressesList">
+                                <!-- Addresses will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div id="security-tab" class="profile-tab">
+                            <div class="tab-header">
+                                <h2>Bảo mật tài khoản</h2>
+                            </div>
+
+                            <div class="security-content">
+                                <div class="security-item">
+                                    <div class="security-info">
+                                        <h3>Đổi mật khẩu</h3>
+                                        <p>Cập nhật mật khẩu để bảo vệ tài khoản của bạn</p>
+                                    </div>
+                                    <button onclick="showChangePasswordModal()" class="btn btn-primary">
+                                        <i class="fas fa-key"></i> Đổi mật khẩu
+                                    </button>
+                                </div>
+
+                                <div class="security-item">
+                                    <div class="security-info">
+                                        <h3>Xác thực 2 bước</h3>
+                                        <p>Tăng cường bảo mật với xác thực 2 bước</p>
+                                    </div>
+                                    <button class="btn btn-secondary" disabled>
+                                        <i class="fas fa-shield-alt"></i> Đang phát triển
+                                    </button>
+                                </div>
+
+                                <div class="security-item">
+                                    <div class="security-info">
+                                        <h3>Lịch sử đăng nhập</h3>
+                                        <p>Xem các lần đăng nhập gần đây</p>
+                                    </div>
+                                    <button class="btn btn-secondary" disabled>
+                                        <i class="fas fa-history"></i> Đang phát triển
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('changePasswordModal')">&times;</span>
+                <h2>Đổi mật khẩu</h2>
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input type="password" id="newPassword" minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirmNewPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" onclick="closeModal('changePasswordModal')" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Debug Console</h2>
+            <div class="test-info">
+                <h3>Check browser console for debug messages</h3>
+                <p>Open Developer Tools (F12) and check the Console tab for detailed logs</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/image-handler.js"></script>
+    <script src="js/profile-new.js"></script>
+    <script>
+        // Create test user data
+        const testUser = {
+            id: 1,
+            name: 'Nguyễn Văn Test',
+            email: 'test@example.com',
+            phone: '0123456789',
+            address: '123 Đường Test, Quận 1, TP.HCM',
+            birthDate: '1990-01-01',
+            gender: 'male',
+            role: 'customer',
+            password: '123456',
+            created_at: '2024-01-01T00:00:00.000Z'
+        };
+
+        // Create test orders
+        const testOrders = [
+            {
+                id: 1,
+                user_id: 1,
+                created_date: '2024-01-15T10:30:00.000Z',
+                status: 'completed',
+                total_amount: 299000
+            },
+            {
+                id: 2,
+                user_id: 1,
+                created_date: '2024-01-20T14:20:00.000Z',
+                status: 'shipping',
+                total_amount: 450000
+            },
+            {
+                id: 3,
+                user_id: 1,
+                created_date: '2024-01-25T09:15:00.000Z',
+                status: 'pending',
+                total_amount: 199000
+            }
+        ];
+
+        const testOrderDetails = [
+            {
+                id: 1,
+                order_id: 1,
+                product_id: 1,
+                variant_id: 1,
+                quantity: 1,
+                unit_price: 299000
+            },
+            {
+                id: 2,
+                order_id: 2,
+                product_id: 2,
+                variant_id: 4,
+                quantity: 1,
+                unit_price: 450000
+            },
+            {
+                id: 3,
+                order_id: 3,
+                product_id: 3,
+                variant_id: 6,
+                quantity: 1,
+                unit_price: 199000
+            }
+        ];
+
+        // Set global variables
+        window.currentUser = testUser;
+        window.database = {
+            users: [testUser],
+            products: [
+                {
+                    id: 1,
+                    name: 'Áo sơ mi trắng công sở',
+                    image: 'https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang'
+                },
+                {
+                    id: 2,
+                    name: 'Váy đầm hoa nhí',
+                    image: 'https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa'
+                },
+                {
+                    id: 3,
+                    name: 'Áo thun polo nam',
+                    image: 'https://via.placeholder.com/300x300/4ecdc4/ffffff?text=Ao+Thun+Polo'
+                }
+            ],
+            categories: [],
+            orders: testOrders,
+            order_details: testOrderDetails,
+            product_variants: [
+                {
+                    id: 1,
+                    product_id: 1,
+                    variant_name: 'Size M - Trắng'
+                },
+                {
+                    id: 4,
+                    product_id: 2,
+                    variant_name: 'Size S - Hoa nhí xanh'
+                },
+                {
+                    id: 6,
+                    product_id: 3,
+                    variant_name: 'Size M - Xanh navy'
+                }
+            ]
+        };
+
+        // Initialize test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test profile new page loaded');
+            console.log('Test user:', testUser);
+            console.log('Test orders:', testOrders);
+        });
+    </script>
+</body>
+</html>
