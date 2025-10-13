@@ -238,7 +238,7 @@ function hideLoadingState() {
             <div id="info-tab" class="profile-tab active">
                 <div class="tab-header">
                     <h2>Thông tin cá nhân</h2>
-                    <button onclick="toggleEditMode()" class="btn btn-primary" id="editBtn">
+                    <button class="btn btn-primary" id="editBtn">
                         <i class="fas fa-edit"></i> Chỉnh sửa
                     </button>
                 </div>
@@ -310,7 +310,7 @@ function hideLoadingState() {
                         </div>
 
                         <div class="form-actions hidden" id="formActions">
-                            <button type="button" onclick="cancelEdit()" class="btn btn-secondary">
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">
                                 <i class="fas fa-times"></i> Hủy
                             </button>
                             <button type="submit" class="btn btn-primary">
@@ -395,6 +395,11 @@ function hideLoadingState() {
                 </div>
             </div>
         `;
+        
+        // Setup forms after restoring content
+        setTimeout(() => {
+            setupProfileForms();
+        }, 100);
     }
 }
 
@@ -462,17 +467,49 @@ function loadUserProfile() {
 }
 
 function setupProfileForms() {
+    console.log('Setting up profile forms...');
+    
     // Profile form
     const profileForm = document.getElementById('profileForm');
     if (profileForm) {
+        // Remove existing listeners to avoid duplicates
+        profileForm.removeEventListener('submit', handleProfileUpdate);
         profileForm.addEventListener('submit', handleProfileUpdate);
+        console.log('Profile form event listener added');
+    } else {
+        console.error('Profile form not found');
     }
     
     // Change password form
     const changePasswordForm = document.getElementById('changePasswordForm');
     if (changePasswordForm) {
+        // Remove existing listeners to avoid duplicates
+        changePasswordForm.removeEventListener('submit', handleChangePassword);
         changePasswordForm.addEventListener('submit', handleChangePassword);
+        console.log('Change password form event listener added');
+    } else {
+        console.warn('Change password form not found');
     }
+    
+    // Setup edit button
+    const editBtn = document.getElementById('editBtn');
+    if (editBtn) {
+        editBtn.onclick = function() { toggleEditMode(); };
+        console.log('Edit button setup completed');
+    } else {
+        console.error('Edit button not found');
+    }
+    
+    // Setup cancel button
+    const cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) {
+        cancelBtn.onclick = function() { cancelEdit(); };
+        console.log('Cancel button setup completed');
+    } else {
+        console.warn('Cancel button not found');
+    }
+    
+    console.log('Profile forms setup completed');
 }
 
 function showProfileTab(tabName) {
@@ -504,17 +541,34 @@ function showProfileTab(tabName) {
 }
 
 function toggleEditMode() {
-    isEditMode = !isEditMode;
+    console.log('toggleEditMode called, current isEditMode:', isEditMode);
     
     const editBtn = document.getElementById('editBtn');
     const formActions = document.getElementById('formActions');
     const formInputs = document.querySelectorAll('#profileForm input:not([type="email"]), #profileForm textarea, #profileForm select');
     
+    if (!editBtn) {
+        console.error('Edit button not found');
+        return;
+    }
+    
+    if (!formActions) {
+        console.error('Form actions not found');
+        return;
+    }
+    
+    isEditMode = !isEditMode;
+    console.log('New isEditMode:', isEditMode);
+    
     if (isEditMode) {
         // Enable edit mode
         editBtn.innerHTML = '<i class="fas fa-times"></i> Hủy';
         editBtn.className = 'btn btn-secondary';
-        formActions.classList.remove('hidden');
+        editBtn.onclick = function() { cancelEdit(); };
+        
+        if (formActions) {
+            formActions.classList.remove('hidden');
+        }
         
         formInputs.forEach(input => {
             if (input.id !== 'email' && input.id !== 'joinDate') {
@@ -522,6 +576,8 @@ function toggleEditMode() {
                 input.removeAttribute('disabled');
             }
         });
+        
+        console.log('Edit mode enabled');
     } else {
         // Disable edit mode
         cancelEdit();
@@ -529,80 +585,124 @@ function toggleEditMode() {
 }
 
 function cancelEdit() {
+    console.log('cancelEdit called');
     isEditMode = false;
     
     const editBtn = document.getElementById('editBtn');
     const formActions = document.getElementById('formActions');
     const formInputs = document.querySelectorAll('#profileForm input:not([type="email"]), #profileForm textarea, #profileForm select');
     
-    editBtn.innerHTML = '<i class="fas fa-edit"></i> Chỉnh sửa';
-    editBtn.className = 'btn btn-primary';
-    formActions.classList.add('hidden');
+    if (editBtn) {
+        editBtn.innerHTML = '<i class="fas fa-edit"></i> Chỉnh sửa';
+        editBtn.className = 'btn btn-primary';
+        editBtn.onclick = function() { toggleEditMode(); };
+    }
+    
+    if (formActions) {
+        formActions.classList.add('hidden');
+    }
     
     formInputs.forEach(input => {
-        input.setAttribute('readonly', '');
-        input.setAttribute('disabled', '');
+        if (input.id !== 'email' && input.id !== 'joinDate') {
+            input.setAttribute('readonly', '');
+            input.setAttribute('disabled', '');
+        }
     });
     
     // Restore original data
-    document.getElementById('fullName').value = originalFormData.name;
-    document.getElementById('phone').value = originalFormData.phone;
-    document.getElementById('address').value = originalFormData.address;
-    document.getElementById('birthDate').value = originalFormData.birthDate;
-    document.getElementById('gender').value = originalFormData.gender;
+    if (originalFormData) {
+        const fullNameEl = document.getElementById('fullName');
+        const phoneEl = document.getElementById('phone');
+        const addressEl = document.getElementById('address');
+        const birthDateEl = document.getElementById('birthDate');
+        const genderEl = document.getElementById('gender');
+        
+        if (fullNameEl) fullNameEl.value = originalFormData.name || '';
+        if (phoneEl) phoneEl.value = originalFormData.phone || '';
+        if (addressEl) addressEl.value = originalFormData.address || '';
+        if (birthDateEl) birthDateEl.value = originalFormData.birthDate || '';
+        if (genderEl) genderEl.value = originalFormData.gender || '';
+    }
+    
+    console.log('Edit mode cancelled');
 }
 
 function handleProfileUpdate(e) {
     e.preventDefault();
+    console.log('handleProfileUpdate called');
     
-    const formData = new FormData(e.target);
-    const updatedData = {
-        name: formData.get('fullName'),
-        phone: formData.get('phone'),
-        address: formData.get('address'),
-        birthDate: formData.get('birthDate'),
-        gender: formData.get('gender')
-    };
-    
-    // Validation
-    if (!updatedData.name.trim()) {
-        showNotification('Vui lòng nhập họ tên!', 'error');
-        return;
+    try {
+        const formData = new FormData(e.target);
+        const updatedData = {
+            name: formData.get('fullName'),
+            phone: formData.get('phone'),
+            address: formData.get('address'),
+            birthDate: formData.get('birthDate'),
+            gender: formData.get('gender')
+        };
+        
+        console.log('Updated data:', updatedData);
+        
+        // Validation
+        if (!updatedData.name || !updatedData.name.trim()) {
+            showNotification('Vui lòng nhập họ tên!', 'error');
+            return;
+        }
+        
+        if (updatedData.phone && !isValidPhone(updatedData.phone)) {
+            showNotification('Số điện thoại không hợp lệ!', 'error');
+            return;
+        }
+        
+        // Update user data
+        if (currentUser) {
+            currentUser.name = updatedData.name.trim();
+            currentUser.phone = updatedData.phone ? updatedData.phone.trim() : '';
+            currentUser.address = updatedData.address ? updatedData.address.trim() : '';
+            currentUser.birthDate = updatedData.birthDate || '';
+            currentUser.gender = updatedData.gender || '';
+            
+            console.log('Updated currentUser:', currentUser);
+        }
+        
+        // Update in database
+        if (database && database.users) {
+            const userIndex = database.users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                database.users[userIndex] = { ...database.users[userIndex], ...currentUser };
+                saveDatabase();
+                console.log('Database updated');
+            }
+        }
+        
+        // Update localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        console.log('localStorage updated');
+        
+        // Update UI
+        const profileNameEl = document.getElementById('profileName');
+        const userNameEl = document.getElementById('userName');
+        
+        if (profileNameEl) {
+            profileNameEl.textContent = currentUser.name;
+        }
+        if (userNameEl) {
+            userNameEl.textContent = currentUser.name;
+        }
+        
+        // Store new original data
+        originalFormData = { ...updatedData };
+        
+        // Exit edit mode
+        cancelEdit();
+        
+        showNotification('Cập nhật thông tin thành công!', 'success');
+        console.log('Profile update completed successfully');
+        
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        showNotification('Lỗi cập nhật thông tin! Vui lòng thử lại.', 'error');
     }
-    
-    if (updatedData.phone && !isValidPhone(updatedData.phone)) {
-        showNotification('Số điện thoại không hợp lệ!', 'error');
-        return;
-    }
-    
-    // Update user data
-    currentUser.name = updatedData.name;
-    currentUser.phone = updatedData.phone;
-    currentUser.address = updatedData.address;
-    currentUser.birthDate = updatedData.birthDate;
-    currentUser.gender = updatedData.gender;
-    
-    // Update in database
-    const userIndex = database.users.findIndex(u => u.id === currentUser.id);
-    if (userIndex !== -1) {
-        database.users[userIndex] = { ...database.users[userIndex], ...currentUser };
-        saveDatabase();
-    }
-    
-    // Update localStorage
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    
-    // Update UI
-    document.getElementById('profileName').textContent = currentUser.name;
-    document.getElementById('userName').textContent = currentUser.name;
-    
-    // Store new original data
-    originalFormData = { ...updatedData };
-    
-    // Exit edit mode
-    toggleEditMode();
-    
-    showNotification('Cập nhật thông tin thành công!', 'success');
 }
 
 function loadUserOrders() {
