@@ -4,6 +4,103 @@ console.log('Profile.js loaded');
 let isEditMode = false;
 let originalFormData = {};
 
+// Utility functions
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add styles if not exists
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .notification-success { background: #28a745; }
+            .notification-error { background: #dc3545; }
+            .notification-info { background: #17a2b8; }
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideInRight 0.3s ease reverse';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 5000);
+}
+
+// Make showNotification available globally
+window.showNotification = showNotification;
+
+// Utility function to format price
+function formatPrice(price) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(price);
+}
+
+// Make formatPrice available globally
+window.formatPrice = formatPrice;
+
+// Utility function to save database
+function saveDatabase() {
+    if (database) {
+        localStorage.setItem('database', JSON.stringify(database));
+        console.log('Database saved to localStorage');
+    }
+}
+
+// Make saveDatabase available globally
+window.saveDatabase = saveDatabase;
+
+// Utility function to close modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Make closeModal available globally
+window.closeModal = closeModal;
+
 // Initialize profile page
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Profile page DOM loaded');
@@ -11,65 +108,107 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Show loading state
     showLoadingState();
     
-    // Wait for app.js to initialize
-    let attempts = 0;
-    const maxAttempts = 100; // Increase max attempts
-    
-    while (attempts < maxAttempts) {
-        console.log(`Attempt ${attempts + 1}/${maxAttempts}: Checking user and database...`);
+    try {
+        // Wait for app.js to initialize with a more robust approach
+        let attempts = 0;
+        const maxAttempts = 50; // Reduce max attempts but increase timeout
         
-        // Try to ensure user is loaded
-        if (typeof ensureUserLoaded === 'function') {
-            ensureUserLoaded();
-        } else {
-            // Fallback if ensureUserLoaded is not available yet
+        while (attempts < maxAttempts) {
+            console.log(`Attempt ${attempts + 1}/${maxAttempts}: Checking user and database...`);
+            
+            // Try to load user from localStorage first
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser && !currentUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
-                    console.log('Loaded user from localStorage (fallback):', currentUser);
+                    console.log('Loaded user from localStorage:', currentUser);
                 } catch (e) {
                     console.error('Error parsing saved user:', e);
+                    localStorage.removeItem('currentUser');
                 }
             }
+            
+            // Try to load database from localStorage
+            const savedDatabase = localStorage.getItem('database');
+            if (savedDatabase && !database) {
+                try {
+                    database = JSON.parse(savedDatabase);
+                    console.log('Loaded database from localStorage');
+                } catch (e) {
+                    console.error('Error parsing saved database:', e);
+                    localStorage.removeItem('database');
+                }
+            }
+            
+            // If database is not loaded, try to load from JSON file
+            if (!database) {
+                try {
+                    const response = await fetch('data/database.json');
+                    if (response.ok) {
+                        database = await response.json();
+                        console.log('Loaded database from JSON file');
+                        // Save to localStorage for future use
+                        localStorage.setItem('database', JSON.stringify(database));
+                    }
+                } catch (e) {
+                    console.error('Error loading database from JSON:', e);
+                }
+            }
+            
+            // Check if we have both user and database
+            if (currentUser && database) {
+                console.log('Both user and database are ready!');
+                break;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 200));
+            attempts++;
         }
         
-        // Check if we have both user and database
-        if (currentUser && database) {
-            console.log('Both user and database are ready!');
-            break;
+        // Hide loading state
+        hideLoadingState();
+        
+        // Final check if user is logged in
+        if (!currentUser) {
+            console.log('No user found after waiting');
+            showNotification('Vui lòng đăng nhập để xem thông tin cá nhân!', 'error');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+            return;
         }
         
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
-    }
-    
-    // Hide loading state
-    hideLoadingState();
-    
-    // Final check if user is logged in
-    if (!currentUser) {
-        console.log('No user found after waiting');
-        showNotification('Vui lòng đăng nhập để xem thông tin cá nhân!', 'error');
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 3000);
-        return;
-    }
-    
-    console.log('Profile page ready with user:', currentUser);
-    
-    // Initialize profile
-    loadUserProfile();
-    setupProfileForms();
-    
-    // Load default tab content
-    showProfileTab('info');
-    
-    // Handle URL hash for direct tab access
-    const hash = window.location.hash.replace('#', '');
-    if (hash && ['info', 'orders', 'addresses', 'security'].includes(hash)) {
-        showProfileTab(hash);
+        if (!database) {
+            console.log('Database not loaded, using fallback profile');
+            showNotification('Sử dụng chế độ hiển thị cơ bản', 'info');
+            createFallbackProfile();
+            return;
+        }
+        
+        console.log('Profile page ready with user:', currentUser);
+        
+        // Initialize profile
+        try {
+            loadUserProfile();
+            setupProfileForms();
+            
+            // Load default tab content
+            showProfileTab('info');
+            
+            // Handle URL hash for direct tab access
+            const hash = window.location.hash.replace('#', '');
+            if (hash && ['info', 'orders', 'addresses', 'security'].includes(hash)) {
+                showProfileTab(hash);
+            }
+        } catch (error) {
+            console.error('Error initializing profile:', error);
+            createFallbackProfile();
+        }
+        
+    } catch (error) {
+        console.error('Error initializing profile page:', error);
+        hideLoadingState();
+        showNotification('Lỗi tải trang! Vui lòng thử lại.', 'error');
     }
 });
 
@@ -89,35 +228,237 @@ function showLoadingState() {
 function hideLoadingState() {
     // The loading state will be replaced when profile content loads
     console.log('Loading state will be replaced by profile content');
+    
+    // Ensure the profile content is properly restored
+    const profileContent = document.querySelector('.profile-content');
+    if (profileContent && profileContent.innerHTML.includes('loading')) {
+        // If still showing loading, restore the original content
+        profileContent.innerHTML = `
+            <!-- Personal Info Tab -->
+            <div id="info-tab" class="profile-tab active">
+                <div class="tab-header">
+                    <h2>Thông tin cá nhân</h2>
+                    <button onclick="toggleEditMode()" class="btn btn-primary" id="editBtn">
+                        <i class="fas fa-edit"></i> Chỉnh sửa
+                    </button>
+                </div>
+
+                <div class="profile-form">
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">
+                                    <i class="fas fa-user"></i>
+                                    Họ và tên
+                                </label>
+                                <input type="text" id="fullName" name="fullName" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">
+                                    <i class="fas fa-envelope"></i>
+                                    Email
+                                </label>
+                                <input type="email" id="email" name="email" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">
+                                    <i class="fas fa-phone"></i>
+                                    Số điện thoại
+                                </label>
+                                <input type="tel" id="phone" name="phone" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="birthDate">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    Ngày sinh
+                                </label>
+                                <input type="date" id="birthDate" name="birthDate" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Địa chỉ
+                            </label>
+                            <textarea id="address" name="address" rows="3" readonly></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gender">
+                                    <i class="fas fa-venus-mars"></i>
+                                    Giới tính
+                                </label>
+                                <select id="gender" name="gender" disabled>
+                                    <option value="">Chọn giới tính</option>
+                                    <option value="male">Nam</option>
+                                    <option value="female">Nữ</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="joinDate">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Ngày tham gia
+                                </label>
+                                <input type="text" id="joinDate" name="joinDate" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-actions hidden" id="formActions">
+                            <button type="button" onclick="cancelEdit()" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Hủy
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders-tab" class="profile-tab">
+                <div class="tab-header">
+                    <h2>Đơn hàng của tôi</h2>
+                    <div class="order-filters">
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="">Tất cả đơn hàng</option>
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="processing">Đang xử lý</option>
+                            <option value="shipping">Đang giao hàng</option>
+                            <option value="completed">Hoàn thành</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Addresses Tab -->
+            <div id="addresses-tab" class="profile-tab">
+                <div class="tab-header">
+                    <h2>Địa chỉ giao hàng</h2>
+                    <button onclick="showAddAddressModal()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Thêm địa chỉ
+                    </button>
+                </div>
+
+                <div class="addresses-list" id="addressesList">
+                    <!-- Addresses will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div id="security-tab" class="profile-tab">
+                <div class="tab-header">
+                    <h2>Bảo mật tài khoản</h2>
+                </div>
+
+                <div class="security-content">
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h3>Đổi mật khẩu</h3>
+                            <p>Cập nhật mật khẩu để bảo vệ tài khoản của bạn</p>
+                        </div>
+                        <button onclick="showChangePasswordModal()" class="btn btn-primary">
+                            <i class="fas fa-key"></i> Đổi mật khẩu
+                        </button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h3>Xác thực 2 bước</h3>
+                            <p>Tăng cường bảo mật với xác thực 2 bước</p>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <i class="fas fa-shield-alt"></i> Đang phát triển
+                        </button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h3>Lịch sử đăng nhập</h3>
+                            <p>Xem các lần đăng nhập gần đây</p>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <i class="fas fa-history"></i> Đang phát triển
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 }
 
 function loadUserProfile() {
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.error('No currentUser available for loadUserProfile');
+        return;
+    }
     
-    // Update sidebar info
-    document.getElementById('profileName').textContent = currentUser.name;
-    document.getElementById('profileRole').textContent = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+    console.log('Loading user profile for:', currentUser);
     
-    // Update form fields
-    document.getElementById('fullName').value = currentUser.name || '';
-    document.getElementById('email').value = currentUser.email || '';
-    document.getElementById('phone').value = currentUser.phone || '';
-    document.getElementById('address').value = currentUser.address || '';
-    document.getElementById('birthDate').value = currentUser.birthDate || '';
-    document.getElementById('gender').value = currentUser.gender || '';
-    
-    // Set join date
-    const joinDate = currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('vi-VN') : 'Không xác định';
-    document.getElementById('joinDate').value = joinDate;
-    
-    // Store original data
-    originalFormData = {
-        name: currentUser.name || '',
-        phone: currentUser.phone || '',
-        address: currentUser.address || '',
-        birthDate: currentUser.birthDate || '',
-        gender: currentUser.gender || ''
-    };
+    try {
+        // Update sidebar info
+        const profileNameEl = document.getElementById('profileName');
+        const profileRoleEl = document.getElementById('profileRole');
+        
+        if (profileNameEl) {
+            profileNameEl.textContent = currentUser.name || 'Người dùng';
+        }
+        if (profileRoleEl) {
+            profileRoleEl.textContent = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+        }
+        
+        // Update form fields with error handling
+        const formFields = {
+            'fullName': currentUser.name || '',
+            'email': currentUser.email || '',
+            'phone': currentUser.phone || '',
+            'address': currentUser.address || '',
+            'birthDate': currentUser.birthDate || '',
+            'gender': currentUser.gender || ''
+        };
+        
+        Object.entries(formFields).forEach(([fieldId, value]) => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.value = value;
+            } else {
+                console.warn(`Element with id '${fieldId}' not found`);
+            }
+        });
+        
+        // Set join date
+        const joinDateEl = document.getElementById('joinDate');
+        if (joinDateEl) {
+            const joinDate = currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('vi-VN') : 'Không xác định';
+            joinDateEl.value = joinDate;
+        }
+        
+        // Store original data
+        originalFormData = {
+            name: currentUser.name || '',
+            phone: currentUser.phone || '',
+            address: currentUser.address || '',
+            birthDate: currentUser.birthDate || '',
+            gender: currentUser.gender || ''
+        };
+        
+        console.log('User profile loaded successfully');
+        
+    } catch (error) {
+        console.error('Error loading user profile:', error);
+        showNotification('Lỗi tải thông tin cá nhân!', 'error');
+    }
 }
 
 function setupProfileForms() {
@@ -490,8 +831,56 @@ function getStatusText(status) {
     return statusMap[status] || status;
 }
 
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+// Fallback function to create a simple profile display
+function createFallbackProfile() {
+    console.log('Creating fallback profile display');
+    
+    const profileContent = document.querySelector('.profile-content');
+    if (!profileContent) return;
+    
+    profileContent.innerHTML = `
+        <div class="profile-tab active">
+            <div class="tab-header">
+                <h2>Thông tin cá nhân</h2>
+            </div>
+            
+            <div class="profile-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Họ và tên</label>
+                    <input type="text" value="${currentUser?.name || 'Chưa có thông tin'}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" value="${currentUser?.email || 'Chưa có thông tin'}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Số điện thoại</label>
+                    <input type="tel" value="${currentUser?.phone || 'Chưa có thông tin'}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                    <textarea readonly>${currentUser?.address || 'Chưa có thông tin'}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày tham gia</label>
+                    <input type="text" value="${currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString('vi-VN') : 'Không xác định'}" readonly>
+                </div>
+                
+                <div class="form-actions">
+                    <button onclick="window.location.href='index.html'" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </button>
+                    <button onclick="window.location.reload()" class="btn btn-secondary">
+                        <i class="fas fa-refresh"></i> Tải lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Override the viewProfile function from app.js
