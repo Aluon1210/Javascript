@@ -60,7 +60,9 @@ function displayCartItems() {
     cartItemsList.innerHTML = cartItems.map((item, index) => `
         <div class="cart-item" data-index="${index}">
             <div class="cart-item-image">
-                <img src="${item.image}" alt="${item.productName}">
+                <img src="${window.getSafeImageUrl ? window.getSafeImageUrl(item.image, item.productName) : item.image}" 
+                     alt="${item.productName}" 
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik00MCAyMEM0OS45NDEgMjAgNTggMjguMDU5IDU4IDM4QzU4IDQ3Ljk0MSA0OS45NDEgNTYgNDAgNTZDMzAuMDU5IDU2IDIyIDQ3Ljk0MSAyMiAzOEMyMiAyOC4wNTkgMzAuMDU5IDIwIDQwIDIwWiIgZmlsbD0iI0NDQ0NDQyIvPgo8cGF0aCBkPSJNNDAgMzBDNDMuMzEzIDMwIDQ2IDMyLjY4NyA0NiAzNkM0NiAzOS4zMTMgNDMuMzEzIDQyIDQwIDQyQzM2LjY4NyA0MiAzNCAzOS4zMTMgMzQgMzZDMzQgMzIuNjg3IDM2LjY4NyAzMCA0MCAzMFoiIGZpbGw9IiM5OTk5OTkiLz4KPHN0eWxlPgo8IVtDREFUQVsKdGV4dCB7IGZvbnQtZmFtaWx5OiBBcmlhbDsgZm9udC1zaXplOiAxMHB4OyBmaWxsOiAjOTk5OTk5OyB0ZXh0LWFuY2hvcjogbWlkZGxlOyB9CgpdXT4KPC9zdHlsZT4KPHRleHQgeD0iNDAiIHk9IjY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+Cg=='">
             </div>
             
             <div class="cart-item-info">

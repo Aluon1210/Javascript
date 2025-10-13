@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Profile - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-store"></i> Susan Shop</a></h1>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="products.html">Sản phẩm</a></li>
+                        <li><a href="categories.html">Danh mục</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="user-actions">
+                        <button id="userProfile" onclick="showUserMenu()"><i class="fas fa-user-circle"></i> <span id="userName">Test User</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Trang chủ</a> > <span>Thông tin cá nhân</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-container">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 id="profileName">Tên người dùng</h3>
+                        <p id="profileRole">Khách hàng</p>
+                    </div>
+                    
+                    <nav class="profile-nav">
+                        <a href="#" onclick="showProfileTab('info')" class="profile-nav-item active" data-tab="info">
+                            <i class="fas fa-user"></i>
+                            <span>Thông tin cá nhân</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('orders')" class="profile-nav-item" data-tab="orders">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Đơn hàng của tôi</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('addresses')" class="profile-nav-item" data-tab="addresses">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Địa chỉ giao hàng</span>
+                        </a>
+                        <a href="#" onclick="showProfileTab('security')" class="profile-nav-item" data-tab="security">
+                            <i class="fas fa-lock"></i>
+                            <span>Bảo mật</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Main Content -->
+                <div class="profile-content">
+                    <!-- Content will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Script -->
+    <script>
+        // Create test user data
+        const testUser = {
+            id: 1,
+            name: 'Nguyễn Văn A',
+            email: 'test@example.com',
+            phone: '0123456789',
+            address: '123 Đường ABC, Quận 1, TP.HCM',
+            birthDate: '1990-01-01',
+            gender: 'male',
+            role: 'customer',
+            created_at: '2024-01-01T00:00:00.000Z'
+        };
+
+        // Set global variables
+        window.currentUser = testUser;
+        window.database = {
+            users: [testUser],
+            products: [],
+            categories: [],
+            orders: [],
+            order_details: [],
+            product_variants: []
+        };
+
+        // Load profile.js
+        const script = document.createElement('script');
+        script.src = 'js/profile.js';
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

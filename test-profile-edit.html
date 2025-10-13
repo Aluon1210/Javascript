@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Profile Edit - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/image-fixes.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .test-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .test-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        .test-info p {
+            margin: 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Test Profile Edit Functionality</h1>
+        
+        <div class="test-section">
+            <h2>Test Instructions</h2>
+            <div class="test-info">
+                <h3>Steps to test:</h3>
+                <p>1. Click "Chỉnh sửa" button to enter edit mode</p>
+                <p>2. Modify some fields (name, phone, address, etc.)</p>
+                <p>3. Click "Lưu thay đổi" to save</p>
+                <p>4. Or click "Hủy" to cancel changes</p>
+                <p>5. Check console for debug messages</p>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <div class="container">
+                <div class="profile-container">
+                    <!-- Sidebar -->
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 id="profileName">Test User</h3>
+                            <p id="profileRole">Khách hàng</p>
+                        </div>
+                        
+                        <nav class="profile-nav">
+                            <a href="#" onclick="showProfileTab('info')" class="profile-nav-item active" data-tab="info">
+                                <i class="fas fa-user"></i>
+                                <span>Thông tin cá nhân</span>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="profile-content">
+                        <!-- Personal Info Tab -->
+                        <div id="info-tab" class="profile-tab active">
+                            <div class="tab-header">
+                                <h2>Thông tin cá nhân</h2>
+                                <button class="btn btn-primary" id="editBtn">
+                                    <i class="fas fa-edit"></i> Chỉnh sửa
+                                </button>
+                            </div>
+
+                            <div class="profile-form">
+                                <form id="profileForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="fullName">
+                                                <i class="fas fa-user"></i>
+                                                Họ và tên
+                                            </label>
+                                            <input type="text" id="fullName" name="fullName" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">
+                                                <i class="fas fa-envelope"></i>
+                                                Email
+                                            </label>
+                                            <input type="email" id="email" name="email" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="phone">
+                                                <i class="fas fa-phone"></i>
+                                                Số điện thoại
+                                            </label>
+                                            <input type="tel" id="phone" name="phone" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="birthDate">
+                                                <i class="fas fa-birthday-cake"></i>
+                                                Ngày sinh
+                                            </label>
+                                            <input type="date" id="birthDate" name="birthDate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Địa chỉ
+                                        </label>
+                                        <textarea id="address" name="address" rows="3" readonly></textarea>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="gender">
+                                                <i class="fas fa-venus-mars"></i>
+                                                Giới tính
+                                            </label>
+                                            <select id="gender" name="gender" disabled>
+                                                <option value="">Chọn giới tính</option>
+                                                <option value="male">Nam</option>
+                                                <option value="female">Nữ</option>
+                                                <option value="other">Khác</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="joinDate">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Ngày tham gia
+                                            </label>
+                                            <input type="text" id="joinDate" name="joinDate" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions hidden" id="formActions">
+                                        <button type="button" class="btn btn-secondary" id="cancelBtn">
+                                            <i class="fas fa-times"></i> Hủy
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="test-section">
+            <h2>Debug Console</h2>
+            <div class="test-info">
+                <h3>Check browser console for debug messages</h3>
+                <p>Open Developer Tools (F12) and check the Console tab for detailed logs</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/image-handler.js"></script>
+    <script src="js/profile.js"></script>
+    <script>
+        // Create test user data
+        const testUser = {
+            id: 1,
+            name: 'Nguyễn Văn Test',
+            email: 'test@example.com',
+            phone: '0123456789',
+            address: '123 Đường Test, Quận 1, TP.HCM',
+            birthDate: '1990-01-01',
+            gender: 'male',
+            role: 'customer',
+            created_at: '2024-01-01T00:00:00.000Z'
+        };
+
+        // Set global variables
+        window.currentUser = testUser;
+        window.database = {
+            users: [testUser],
+            products: [],
+            categories: [],
+            orders: [],
+            order_details: [],
+            product_variants: []
+        };
+
+        // Initialize test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test profile edit page loaded');
+            
+            // Load user profile
+            if (typeof loadUserProfile === 'function') {
+                loadUserProfile();
+            }
+            
+            // Setup forms
+            if (typeof setupProfileForms === 'function') {
+                setupProfileForms();
+            }
+            
+            console.log('Test initialization completed');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Images - Susan Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/image-fixes.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .test-item {
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .test-item h4 {
+            margin: 0.5rem 0;
+            color: #333;
+        }
+        .test-item p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Test Image Display</h1>
+        
+        <!-- Test 1: Valid Images -->
+        <div class="test-section">
+            <h2>Test 1: Valid Images (should load normally)</h2>
+            <div class="image-grid">
+                <div class="test-item">
+                    <img src="https://via.placeholder.com/200x200/667eea/ffffff?text=Valid+Image+1" alt="Valid Image 1" class="product-image">
+                    <h4>Valid Image 1</h4>
+                    <p>Should load normally</p>
+                </div>
+                <div class="test-item">
+                    <img src="https://via.placeholder.com/200x200/ff6b6b/ffffff?text=Valid+Image+2" alt="Valid Image 2" class="product-image">
+                    <h4>Valid Image 2</h4>
+                    <p>Should load normally</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Invalid Images -->
+        <div class="test-section">
+            <h2>Test 2: Invalid Images (should show fallback)</h2>
+            <div class="image-grid">
+                <div class="test-item">
+                    <img src="https://invalid-url-that-does-not-exist.com/image.jpg" alt="Invalid Image 1" class="product-image">
+                    <h4>Invalid Image 1</h4>
+                    <p>Should show fallback</p>
+                </div>
+                <div class="test-item">
+                    <img src="https://example.com/nonexistent-image.png" alt="Invalid Image 2" class="product-image">
+                    <h4>Invalid Image 2</h4>
+                    <p>Should show fallback</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Empty Images -->
+        <div class="test-section">
+            <h2>Test 3: Empty Images (should show fallback)</h2>
+            <div class="image-grid">
+                <div class="test-item">
+                    <img src="" alt="Empty Image 1" class="product-image">
+                    <h4>Empty Image 1</h4>
+                    <p>Should show fallback</p>
+                </div>
+                <div class="test-item">
+                    <img src="   " alt="Empty Image 2" class="product-image">
+                    <h4>Empty Image 2</h4>
+                    <p>Should show fallback</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: Using Image Handler -->
+        <div class="test-section">
+            <h2>Test 4: Using Image Handler</h2>
+            <div class="image-grid" id="imageHandlerTest">
+                <!-- Images will be loaded by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Test 5: Product Cards -->
+        <div class="test-section">
+            <h2>Test 5: Product Cards</h2>
+            <div class="image-grid" id="productCardsTest">
+                <!-- Product cards will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/image-handler.js"></script>
+    <script>
+        // Test data
+        const testProducts = [
+            {
+                id: 1,
+                name: 'Test Product 1',
+                image: 'https://via.placeholder.com/200x200/667eea/ffffff?text=Test+Product+1'
+            },
+            {
+                id: 2,
+                name: 'Test Product 2',
+                image: 'https://invalid-url.com/image.jpg'
+            },
+            {
+                id: 3,
+                name: 'Test Product 3',
+                image: ''
+            },
+            {
+                id: 4,
+                name: 'Test Product 4',
+                image: 'https://via.placeholder.com/200x200/ff6b6b/ffffff?text=Test+Product+4'
+            }
+        ];
+
+        // Test Image Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Testing image handler...');
+            
+            // Test 4: Image Handler
+            const imageHandlerTest = document.getElementById('imageHandlerTest');
+            testProducts.forEach((product, index) => {
+                const testItem = document.createElement('div');
+                testItem.className = 'test-item';
+                
+                const img = window.imageHandler.createProductImage(product, '200x200', 'product-image');
+                const h4 = document.createElement('h4');
+                h4.textContent = product.name;
+                const p = document.createElement('p');
+                p.textContent = `Using Image Handler - Test ${index + 1}`;
+                
+                testItem.appendChild(img);
+                testItem.appendChild(h4);
+                testItem.appendChild(p);
+                imageHandlerTest.appendChild(testItem);
+            });
+
+            // Test 5: Product Cards
+            const productCardsTest = document.getElementById('productCardsTest');
+            testProducts.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${window.getSafeImageUrl ? window.getSafeImageUrl(product.image, product.name) : product.image}" 
+                         alt="${product.name}" 
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNTBDMTEwLjQ5MSA1MCAxMTkgNTguNTA5IDExOSA2OUMxMTkgNzkuNDkxIDExMC40OTEgODkgMTAwIDg5Qzg5LjUwOSA4OSA4MSA3OS40OTEgODEgNjlDODEgNTguNTA5IDg5LjUwOSA1MCAxMDAgNTBaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxwYXRoIGQ9Ik0xMDAgNjBDMTA1LjUyMyA2MCAxMTAgNjQuNDc3IDExMCA3MEMxMTAgNzUuNTIzIDEwNS41MjMgODAgMTAwIDgwQzk0LjQ3NyA4MCA5MCA3NS41MjMgOTAgNzBDOTAgNjQuNDc3IDk0LjQ3NyA2MCAxMDAgNjBaIiBmaWxsPSIjOTk5OTk5Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5OTk5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>Test product description</p>
+                        <div class="product-price">$99.99</div>
+                    </div>
+                `;
+                productCardsTest.appendChild(productCard);
+            });
+
+            console.log('Image tests completed');
+        });
+    </script>
+</body>
+</html>
