@@ -428,6 +428,17 @@ img {
     animation: imageFadeIn 0.6s ease-out;
 }
 
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
 /* Image borders */
 .image-border {
     border: 2px solid #e9ecef;
@@ -447,6 +458,17 @@ img {
 
 .image-border-dashed:hover {
     border-color: #667eea;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
 }
 
 /* Image loading states */
@@ -961,6 +983,28 @@ img {
     animation: imageFadeIn 0.6s ease-out;
 }
 
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
 /* Image opacity */
 .image-opacity-50 {
     opacity: 0.5;
@@ -978,6 +1022,28 @@ img {
 
 .image-opacity-75:hover {
     opacity: 1;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
 }
 
 /* Image loading states */
@@ -1485,6 +1551,28 @@ img {
     animation: imageFadeIn 0.6s ease-out;
 }
 
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
 /* Image transitions */
 .image-transition {
     transition: all 0.3s ease;
@@ -1496,6 +1584,17 @@ img {
 
 .image-transition-slow {
     transition: all 0.5s ease;
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
 }
 
 /* Image loading states */
@@ -2035,6 +2134,17 @@ img {
     animation: imageFadeIn 0.6s ease-out;
 }
 
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
+}
+
 /* Image hover effects */
 .image-hover-zoom:hover {
     transform: scale(1.1);
@@ -2061,6 +2171,17 @@ img {
 
 .image-hover-contrast:hover {
     filter: contrast(1.2);
+}
+
+/* Image loading states */
+.image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.image-loaded {
+    animation: imageFadeIn 0.6s ease-out;
 }
 
 /* Image loading states */
