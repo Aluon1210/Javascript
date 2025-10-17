@@ -525,7 +525,17 @@ async function loadHomePage() {
     while (!database) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
+
+    // If new home layout elements exist, render sidebar + products
+    const sidebarList = document.getElementById('homeCategoryList');
+    const homeProducts = document.getElementById('homeProducts');
+    if (sidebarList && homeProducts) {
+        renderHomeSidebar();
+        renderHomeProducts();
+        return;
+    }
+
+    // Fallback to old sections if present
     loadCategories();
     loadFeaturedProducts();
 }
@@ -543,6 +553,77 @@ function loadCategories() {
             <h3>${category.name}</h3>
         </div>
     `).join('');
+}
+
+// New Home Sidebar + Products (no images for category)
+function renderHomeSidebar() {
+    const list = document.getElementById('homeCategoryList');
+    if (!list) return;
+
+    const mainCategories = database.categories.filter(cat => cat.parent_id === null);
+    const childrenMap = new Map();
+    database.categories.forEach(c => {
+        if (c.parent_id) {
+            if (!childrenMap.has(c.parent_id)) childrenMap.set(c.parent_id, []);
+            childrenMap.get(c.parent_id).push(c);
+        }
+    });
+
+    const parts = [];
+    parts.push(`<li class="category-item" data-id="all">Tất cả sản phẩm</li>`);
+    mainCategories.forEach(cat => {
+        const count = database.products.filter(p => p.cate_id === cat.id).length;
+        parts.push(`<li class=\"category-item\" data-id=\"${cat.id}\">${cat.name} <small style=\"color:#6c757d\">(${count})</small></li>`);
+        (childrenMap.get(cat.id) || []).forEach(child => {
+            const childCount = database.products.filter(p => p.cate_id === child.id).length;
+            parts.push(`<li class=\"category-item child\" data-id=\"${child.id}\">${child.name} <small style=\"color:#6c757d\">(${childCount})</small></li>`);
+        });
+    });
+
+    list.innerHTML = parts.join('');
+    list.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const id = item.getAttribute('data-id');
+            setActiveHomeCategory(id);
+            renderHomeProducts(id === 'all' ? null : parseInt(id));
+        });
+    });
+
+    setActiveHomeCategory('all');
+}
+
+function setActiveHomeCategory(id) {
+    document.querySelectorAll('#homeCategoryList .category-item').forEach(i => i.classList.remove('active'));
+    const el = document.querySelector(`#homeCategoryList .category-item[data-id="${id}"]`);
+    if (el) el.classList.add('active');
+}
+
+function renderHomeProducts(categoryId = null) {
+    const container = document.getElementById('homeProducts');
+    const titleEl = document.getElementById('homePageTitle');
+    const countEl = document.getElementById('homeProductsCount');
+    if (!container) return;
+
+    let products = [];
+    if (categoryId === null) {
+        titleEl.textContent = 'Tất cả sản phẩm';
+        products = database.products;
+    } else {
+        const category = database.categories.find(c => c.id === categoryId);
+        titleEl.textContent = category ? category.name : 'Danh mục';
+        products = database.products.filter(p => p.cate_id === categoryId);
+    }
+    if (countEl) countEl.textContent = products.length;
+
+    // Reuse displayProducts helper but targeted at container
+    container.innerHTML = products.map(product => {
+        const variant = database.product_variants.find(v => v.product_id === product.id);
+        const price = variant ? formatPrice(variant.price) : 'Liên hệ';
+        const stock = variant ? variant.quantity : 0;
+        return `
+            <div class=\"product-card\">\n                <div class=\"product-image\">\n                    <img src=\"${product.image}\" alt=\"${product.name}\">\n                    ${stock === 0 ? '<div class=\\"out-of-stock\\">Hết hàng</div>' : ''}\n                </div>\n                <div class=\"product-info\">\n                    <h3>${product.name}</h3>\n                    <p>${product.detail.substring(0, 100)}...</p>\n                    <div class=\"product-price\">${price}</div>\n                    <div class=\"product-stock\">Còn lại: ${stock} sản phẩm</div>\n                    <button class=\"add-to-cart-btn\" onclick=\"addToCart(${product.id})\" ${stock === 0 ? 'disabled' : ''}>\n                        <i class=\"fas fa-cart-plus\"></i> ${stock === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}\n                    </button>\n                </div>\n            </div>
+        `;
+    }).join('');
 }
 
 function loadFeaturedProducts() {
