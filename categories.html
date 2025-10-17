@@ -52,9 +52,22 @@
         <div class="container">
             <h1>Danh mục sản phẩm</h1>
             <p>Khám phá các danh mục sản phẩm đa dạng tại Susan Shop</p>
-            
-            <div class="categories-grid" id="allCategories">
-                <!-- Categories will be loaded here -->
+
+            <div class="categories-layout">
+                <!-- Left: Sidebar categories (no images) -->
+                <aside class="categories-sidebar">
+                    <div class="sidebar-header"><i class="fas fa-list"></i> Danh mục</div>
+                    <ul id="categoryList" class="category-list"></ul>
+                </aside>
+
+                <!-- Right: Products grid -->
+                <div class="products-area">
+                    <div class="products-header">
+                        <h2 id="pageTitle">Tất cả sản phẩm</h2>
+                        <div class="products-count"><span id="productsCount">0</span> sản phẩm</div>
+                    </div>
+                    <div id="productsContainer" class="products-grid"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -133,35 +146,86 @@
     <script src="js/app.js"></script>
     <script src="js/user-menu.js"></script>
     <script>
-        // Load categories when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadAllCategories();
-        });
+        // Initialize categories page (sidebar + products)
+        document.addEventListener('DOMContentLoaded', initializeCategoriesPage);
 
-        async function loadAllCategories() {
+        async function initializeCategoriesPage() {
+            // Wait for database
             while (!database) {
-                await new Promise(resolve => setTimeout(resolve, 100));
+                await new Promise(r => setTimeout(r, 100));
             }
-            
-            const allCategories = document.getElementById('allCategories');
-            if (!allCategories) return;
-            
-            allCategories.innerHTML = database.categories.map(category => {
-                const productCount = database.products.filter(p => p.cate_id === category.id).length;
-                const parentCategory = database.categories.find(c => c.id === category.parent_id);
-                const isMainCategory = !parentCategory;
-                
-                return `
-                    <div class="category-card ${isMainCategory ? 'main-category' : 'sub-category'}" onclick="viewCategory(${category.id})">
-                        <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(category.name)}" alt="${category.name}">
-                        <div class="category-info">
-                            <h3>${category.name}</h3>
-                            ${parentCategory ? `<p class="parent-category">Thuộc: ${parentCategory.name}</p>` : ''}
-                            <p class="product-count">${productCount} sản phẩm</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+
+            renderCategoryList();
+            // Default: show all products
+            setActiveCategory('all');
+            renderProducts(null);
+        }
+
+        function renderCategoryList() {
+            const list = document.getElementById('categoryList');
+            if (!list) return;
+
+            // Build categories: All + main + children
+            const mainCategories = database.categories.filter(c => c.parent_id === null);
+            const childrenMap = new Map();
+            database.categories.forEach(c => {
+                if (c.parent_id) {
+                    if (!childrenMap.has(c.parent_id)) childrenMap.set(c.parent_id, []);
+                    childrenMap.get(c.parent_id).push(c);
+                }
+            });
+
+            const fragments = [];
+            // "All products"
+            fragments.push(`<li class="category-item" data-id="all">Tất cả sản phẩm</li>`);
+
+            mainCategories.forEach(cat => {
+                const productCount = database.products.filter(p => p.cate_id === cat.id).length;
+                fragments.push(`<li class="category-item" data-id="${cat.id}">${cat.name} <small style="color:#6c757d">(${productCount})</small></li>`);
+                const children = childrenMap.get(cat.id) || [];
+                children.forEach(child => {
+                    const childCount = database.products.filter(p => p.cate_id === child.id).length;
+                    fragments.push(`<li class="category-item child" data-id="${child.id}">${child.name} <small style="color:#6c757d">(${childCount})</small></li>`);
+                });
+            });
+
+            list.innerHTML = fragments.join('');
+
+            // Click handlers
+            list.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const id = item.getAttribute('data-id');
+                    setActiveCategory(id);
+                    renderProducts(id === 'all' ? null : parseInt(id));
+                });
+            });
+        }
+
+        function setActiveCategory(id) {
+            document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+            const el = document.querySelector(`.category-item[data-id="${id}"]`);
+            if (el) el.classList.add('active');
+        }
+
+        function renderProducts(categoryId) {
+            const titleEl = document.getElementById('pageTitle');
+            const countEl = document.getElementById('productsCount');
+            let products = [];
+
+            if (categoryId === null) {
+                titleEl.textContent = 'Tất cả sản phẩm';
+                products = database.products;
+            } else {
+                const category = database.categories.find(c => c.id === categoryId);
+                titleEl.textContent = category ? category.name : 'Danh mục';
+                products = database.products.filter(p => p.cate_id === categoryId);
+            }
+
+            if (countEl) countEl.textContent = products.length;
+            // Use shared renderer from app.js
+            if (typeof displayProducts === 'function') {
+                displayProducts(products);
+            }
         }
     </script>
 </body>
