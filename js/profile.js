@@ -78,7 +78,7 @@ function showLoadingState() {
     if (profileContent) {
         profileContent.innerHTML = `
             <div class="loading" style="padding: 4rem; text-align: center;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;"></i>
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #007BFF; margin-bottom: 1rem;"></i>
                 <h3>Đang tải thông tin...</h3>
                 <p>Vui lòng đợi trong giây lát</p>
             </div>

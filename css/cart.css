@@ -21,7 +21,7 @@
 }
 
 .cart-header h1 i {
-    color: #667eea;
+    color: #007BFF;
 }
 
 /* Cart Steps */
@@ -55,7 +55,7 @@
 }
 
 .step.active .step-number {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
 }
 
@@ -194,14 +194,14 @@
     padding: 0.3rem 0.8rem;
     border-radius: 15px;
     font-size: 0.8rem;
-    color: #667eea;
+    color: #007BFF;
     display: inline-block;
 }
 
 .cart-item-price {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #667eea;
+    color: #007BFF;
     margin-top: 0.5rem;
 }
 
@@ -232,12 +232,12 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #667eea;
+    color: #007BFF;
     font-weight: 600;
 }
 
 .quantity-btn:hover {
-    background: #667eea;
+    background: #007BFF;
     color: white;
     transform: scale(1.1);
 }
@@ -321,12 +321,12 @@
 
 .recommended-item p {
     margin: 0 0 0.8rem 0;
-    color: #667eea;
+    color: #007BFF;
     font-weight: 600;
 }
 
 .quick-add-btn {
-    background: #667eea;
+    background: #007BFF;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -337,7 +337,7 @@
 }
 
 .quick-add-btn:hover {
-    background: #5a6fd8;
+    background: #0069d9;
     transform: scale(1.05);
 }
 
@@ -441,14 +441,14 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    color: #667eea;
+    color: #007BFF;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 .continue-shopping:hover {
-    color: #5a6fd8;
+    color: #0069d9;
     text-decoration: underline;
 }
 
@@ -481,7 +481,7 @@
 }
 
 .payment-icons i:hover {
-    color: #667eea;
+    color: #007BFF;
 }
 
 /* Security Info */
@@ -528,13 +528,13 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
 }
 
 .btn-secondary {

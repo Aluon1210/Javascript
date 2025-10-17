@@ -35,7 +35,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,12 +81,12 @@
 
 .profile-nav-item:hover {
     background: #f8f9fa;
-    color: #667eea;
+    color: #007BFF;
     transform: translateX(5px);
 }
 
 .profile-nav-item.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .form-group label i {
-    color: #667eea;
+    color: #007BFF;
     width: 16px;
 }
 
@@ -179,9 +179,9 @@
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #007BFF;
     background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .form-group input[readonly],
@@ -335,7 +335,7 @@
 
 .order-product-price {
     font-weight: 600;
-    color: #667eea;
+    color: #007BFF;
 }
 
 .order-total {
@@ -367,7 +367,7 @@
 }
 
 .address-item:hover {
-    border-color: #667eea;
+    border-color: #007BFF;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -459,13 +459,13 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
 }
 
 .btn-secondary {
