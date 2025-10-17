@@ -131,9 +131,9 @@ async function loadDatabase() {
         // Fallback to sample data
         database = {
             categories: [
-                { id: 1, name: "Thời trang nữ", parent_id: null },
-                { id: 2, name: "Thời trang nam", parent_id: null },
-                { id: 3, name: "Phụ kiện", parent_id: null }
+                { id: 1, name: "Thời trang nữ", parent_id: null, image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center" },
+                { id: 2, name: "Thời trang nam", parent_id: null, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=center" },
+                { id: 3, name: "Phụ kiện", parent_id: null, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=300&fit=crop&crop=center" }
             ],
             products: [
                 {
@@ -141,19 +141,19 @@ async function loadDatabase() {
                     name: "Áo sơ mi trắng công sở",
                     cate_id: 1,
                     detail: "Áo sơ mi trắng thanh lịch, phù hợp cho môi trường công sở. Chất liệu cotton cao cấp, thoáng mát.",
-                    image: "https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang"
+                    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
                 },
                 {
                     id: 2,
                     name: "Váy đầm hoa nhí",
                     cate_id: 1,
                     detail: "Váy đầm hoa nhí xinh xắn, phong cách nữ tính. Chất liệu voan mềm mại, thoải mái khi mặc.",
-                    image: "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa"
+                    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center"
                 }
             ],
             product_variants: [
-                { id: 1, product_id: 1, variant_name: "Size S - Trắng", price: 299000, quantity: 50, image: "https://via.placeholder.com/300x300/667eea/ffffff?text=S+Trang" },
-                { id: 2, product_id: 2, variant_name: "Size M - Hoa nhí", price: 450000, quantity: 30, image: "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=M+Hoa" }
+                { id: 1, product_id: 1, variant_name: "Size S - Trắng", price: 299000, quantity: 50, image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center" },
+                { id: 2, product_id: 2, variant_name: "Size M - Hoa nhí", price: 450000, quantity: 30, image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center" }
             ],
             users: [
                 { id: 1, name: "Admin", email: "admin@susanshop.com", phone: "0123456789", address: "123 ABC", password: "admin123", role: "admin" },
@@ -539,7 +539,7 @@ function loadCategories() {
     
     categoriesGrid.innerHTML = mainCategories.map(category => `
         <div class="category-card" onclick="viewCategory(${category.id})">
-            <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(category.name)}" alt="${category.name}">
+            <img src="${category.image || 'https://via.placeholder.com/300x200/667eea/ffffff?text=' + encodeURIComponent(category.name)}" alt="${category.name}" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=' + encodeURIComponent('${category.name}')">
             <h3>${category.name}</h3>
         </div>
     `).join('');

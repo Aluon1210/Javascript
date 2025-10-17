@@ -3,47 +3,56 @@
     {
       "id": 1,
       "name": "Thời trang nữ",
-      "parent_id": null
+      "parent_id": null,
+      "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 2,
       "name": "Thời trang nam",
-      "parent_id": null
+      "parent_id": null,
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 3,
       "name": "Phụ kiện",
-      "parent_id": null
+      "parent_id": null,
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 4,
       "name": "Áo sơ mi nữ",
-      "parent_id": 1
+      "parent_id": 1,
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 5,
       "name": "Váy đầm",
-      "parent_id": 1
+      "parent_id": 1,
+      "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 6,
       "name": "Áo thun nam",
-      "parent_id": 2
+      "parent_id": 2,
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 7,
       "name": "Quần jean nam",
-      "parent_id": 2
+      "parent_id": 2,
+      "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 8,
       "name": "Túi xách",
-      "parent_id": 3
+      "parent_id": 3,
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=300&fit=crop&crop=center"
     },
     {
       "id": 9,
       "name": "Giày dép",
-      "parent_id": 3
+      "parent_id": 3,
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=300&fit=crop&crop=center"
     }
   ],
   "products": [
@@ -52,56 +61,56 @@
       "name": "Áo sơ mi trắng công sở",
       "cate_id": 4,
       "detail": "Áo sơ mi trắng thanh lịch, phù hợp cho môi trường công sở. Chất liệu cotton cao cấp, thoáng mát.",
-      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=Ao+So+Mi+Trang"
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 2,
       "name": "Váy đầm hoa nhí",
       "cate_id": 5,
       "detail": "Váy đầm hoa nhí xinh xắn, phong cách nữ tính. Chất liệu voan mềm mại, thoải mái khi mặc.",
-      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Vay+Dam+Hoa"
+      "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 3,
       "name": "Áo thun polo nam",
       "cate_id": 6,
       "detail": "Áo thun polo nam basic, phong cách trẻ trung. Chất liệu cotton pha, co giãn tốt.",
-      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=Ao+Thun+Polo"
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 4,
       "name": "Quần jean skinny nam",
       "cate_id": 7,
       "detail": "Quần jean skinny nam form chuẩn, phong cách hiện đại. Chất liệu denim cao cấp, bền đẹp.",
-      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=Quan+Jean+Nam"
+      "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 5,
       "name": "Túi xách da nữ",
       "cate_id": 8,
       "detail": "Túi xách da nữ cao cấp, thiết kế sang trọng. Da thật 100%, đường may tỉ mỉ.",
-      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Tui+Xach+Da"
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 6,
       "name": "Giày sneaker unisex",
       "cate_id": 9,
       "detail": "Giày sneaker unisex phong cách thể thao. Đế cao su êm ái, phù hợp mọi hoạt động.",
-      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=Giay+Sneaker"
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 7,
       "name": "Áo sơ mi kẻ sọc",
       "cate_id": 4,
       "detail": "Áo sơ mi kẻ sọc thời trang, phong cách trẻ trung. Chất liệu cotton mềm mại.",
-      "image": "https://via.placeholder.com/300x300/00d2d3/ffffff?text=Ao+Ke+Soc"
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 8,
       "name": "Váy maxi dài",
       "cate_id": 5,
       "detail": "Váy maxi dài thanh lịch, phù hợp dự tiệc. Chất liệu lụa cao cấp, draping đẹp.",
-      "image": "https://via.placeholder.com/300x300/ff9ff3/ffffff?text=Vay+Maxi"
+      "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center"
     }
   ],
   "product_variants": [
@@ -111,7 +120,7 @@
       "variant_name": "Size S - Trắng",
       "price": 299000,
       "quantity": 50,
-      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=S+Trang"
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 2,
@@ -119,7 +128,7 @@
       "variant_name": "Size M - Trắng",
       "price": 299000,
       "quantity": 30,
-      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=M+Trang"
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 3,
@@ -127,7 +136,7 @@
       "variant_name": "Size L - Trắng",
       "price": 299000,
       "quantity": 20,
-      "image": "https://via.placeholder.com/300x300/667eea/ffffff?text=L+Trang"
+      "image": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 4,
@@ -135,7 +144,7 @@
       "variant_name": "Size S - Hoa nhí xanh",
       "price": 450000,
       "quantity": 25,
-      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=S+Xanh"
+      "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 5,
@@ -143,7 +152,7 @@
       "variant_name": "Size M - Hoa nhí xanh",
       "price": 450000,
       "quantity": 35,
-      "image": "https://via.placeholder.com/300x300/ff6b6b/ffffff?text=M+Xanh"
+      "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 6,
@@ -151,7 +160,7 @@
       "variant_name": "Size M - Xanh navy",
       "price": 199000,
       "quantity": 40,
-      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=M+Navy"
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 7,
@@ -159,7 +168,7 @@
       "variant_name": "Size L - Xanh navy",
       "price": 199000,
       "quantity": 30,
-      "image": "https://via.placeholder.com/300x300/4ecdc4/ffffff?text=L+Navy"
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 8,
@@ -167,7 +176,7 @@
       "variant_name": "Size 30 - Xanh đen",
       "price": 599000,
       "quantity": 15,
-      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=30+Den"
+      "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 9,
@@ -175,7 +184,7 @@
       "variant_name": "Size 32 - Xanh đen",
       "price": 599000,
       "quantity": 20,
-      "image": "https://via.placeholder.com/300x300/45b7d1/ffffff?text=32+Den"
+      "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 10,
@@ -183,7 +192,7 @@
       "variant_name": "Màu đen",
       "price": 899000,
       "quantity": 10,
-      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Den"
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 11,
@@ -191,7 +200,7 @@
       "variant_name": "Màu nâu",
       "price": 899000,
       "quantity": 8,
-      "image": "https://via.placeholder.com/300x300/f7b731/ffffff?text=Nau"
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 12,
@@ -199,7 +208,7 @@
       "variant_name": "Size 38 - Trắng",
       "price": 799000,
       "quantity": 25,
-      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=38+Trang"
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 13,
@@ -207,7 +216,7 @@
       "variant_name": "Size 39 - Trắng",
       "price": 799000,
       "quantity": 30,
-      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=39+Trang"
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center"
     },
     {
       "id": 14,
@@ -215,7 +224,7 @@
       "variant_name": "Size 40 - Đen",
       "price": 799000,
       "quantity": 20,
-      "image": "https://via.placeholder.com/300x300/5f27cd/ffffff?text=40+Den"
+      "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center"
     }
   ],
   "users": [
