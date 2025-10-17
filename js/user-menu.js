@@ -126,7 +126,7 @@ class UserMenu {
                 }
                 .user-info i {
                     font-size: 2rem;
-                    color: #667eea;
+                    color: #007BFF;
                 }
                 .user-info strong {
                     display: block;
@@ -153,8 +153,8 @@ class UserMenu {
                     border-radius: 5px;
                 }
                 .user-dropdown a:hover {
-                    color: #667eea;
-                    background: rgba(102, 126, 234, 0.1);
+                    color: #007BFF;
+                    background: rgba(0, 123, 255, 0.1);
                     padding-left: 0.5rem;
                 }
                 .user-dropdown .logout-btn:hover {

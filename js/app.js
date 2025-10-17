@@ -405,7 +405,7 @@ function showUserMenu() {
             }
             .user-info i {
                 font-size: 2rem;
-                color: #667eea;
+                color: #007BFF;
             }
             .user-info strong {
                 display: block;
@@ -431,7 +431,7 @@ function showUserMenu() {
                 cursor: pointer;
             }
             .user-dropdown a:hover {
-                color: #667eea;
+                color: #007BFF;
             }
             .user-dropdown .logout-btn:hover {
                 color: #dc3545;
@@ -792,7 +792,7 @@ function showThankYouPage() {
             <i class="fas fa-check-circle" style="font-size: 80px; color: #28a745; margin-bottom: 20px;"></i>
             <h2 style="color: #333; margin-bottom: 20px;">Cảm ơn bạn đã mua hàng!</h2>
             <p style="color: #666; margin-bottom: 30px;">Đơn hàng của bạn đã được tiếp nhận và đang được xử lý.</p>
-            <button onclick="window.location.href='index.html'" style="background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer;">
+            <button onclick="window.location.href='index.html'" style="background: #007BFF; color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer;">
                 Tiếp tục mua sắm
             </button>
         </div>

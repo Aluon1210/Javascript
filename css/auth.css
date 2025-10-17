@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -45,7 +45,7 @@ body {
 }
 
 .auth-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
     padding: 2rem;
     text-align: center;
@@ -103,7 +103,7 @@ body {
 }
 
 .form-group label i {
-    color: #667eea;
+    color: #007BFF;
     width: 16px;
 }
 
@@ -121,9 +121,9 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #007BFF;
     background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .form-group textarea {
@@ -163,8 +163,8 @@ body {
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-    background: #667eea;
-    border-color: #667eea;
+    background: #007BFF;
+    border-color: #007BFF;
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
@@ -178,20 +178,20 @@ body {
 }
 
 .forgot-password {
-    color: #667eea;
+    color: #007BFF;
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.3s;
 }
 
 .forgot-password:hover {
-    color: #5a6fd8;
+    color: #0069d9;
     text-decoration: underline;
 }
 
 .auth-btn {
     width: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
     color: white;
     border: none;
     padding: 1rem;
@@ -208,7 +208,7 @@ body {
 
 .auth-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
 }
 
 .auth-btn:active {
@@ -297,14 +297,14 @@ body {
 }
 
 .auth-footer a {
-    color: #667eea;
+    color: #007BFF;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s;
 }
 
 .auth-footer a:hover {
-    color: #5a6fd8;
+    color: #0069d9;
     text-decoration: underline;
 }
 
@@ -383,7 +383,7 @@ body {
 
 .loading-spinner i {
     font-size: 2rem;
-    color: #667eea;
+    color: #007BFF;
     margin-bottom: 1rem;
 }
 
