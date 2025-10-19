@@ -19,7 +19,7 @@
                     <ul>
                         <li><a href="index.html">Trang chủ</a></li>
                         <li><a href="products.html">Sản phẩm</a></li>
-                        <li><a href="categories.html">Danh mục</a></li>
+                        <li><a href="#" onclick="openCategoriesPopup(); return false;">Danh mục</a></li>
                         <li><a href="contact.html">Liên hệ</a></li>
                     </ul>
                 </nav>
@@ -38,31 +38,22 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Chào mừng đến với Susan Shop</h2>
-            <p>Khám phá bộ sưu tập thời trang mới nhất</p>
-            <button class="cta-btn" onclick="window.location.href='products.html'">Mua sắm ngay</button>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories-section">
+    <!-- Home Layout: Left categories sidebar, Right products grid -->
+    <section class="home-layout">
         <div class="container">
-            <h2>Danh mục sản phẩm</h2>
-            <div class="categories-grid" id="categoriesGrid">
-                <!-- Categories will be loaded here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>Sản phẩm nổi bật</h2>
-            <div class="products-grid" id="featuredProducts">
-                <!-- Featured products will be loaded here -->
+            <div class="home-grid">
+                <aside class="home-sidebar">
+                    <h3>Tất cả danh mục</h3>
+                    <ul id="homeCategoriesList" class="category-list"></ul>
+                </aside>
+                <main class="home-products">
+                    <div class="products-grid" id="homeProductsContainer"></div>
+                    <div id="homeNoProducts" class="no-products hidden" style="margin-top: 2rem;">
+                        <i class="fas fa-search" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3>Không tìm thấy sản phẩm nào</h3>
+                        <p>Hãy thử chọn danh mục khác hoặc dùng tìm kiếm</p>
+                    </div>
+                </main>
             </div>
         </div>
     </section>
@@ -107,6 +98,15 @@
                 <h3>Tổng cộng: <span id="cartTotal">0</span> VND</h3>
             </div>
             <button id="checkoutBtn" onclick="checkout()">Thanh toán</button>
+        </div>
+    </div>
+
+    <!-- Categories Popup Modal -->
+    <div id="categoriesModal" class="modal">
+        <div class="modal-content large-modal">
+            <span class="close" onclick="closeModal('categoriesModal')">&times;</span>
+            <h2>Danh mục sản phẩm</h2>
+            <div id="categoriesModalContent" class="categories-modal-grid"></div>
         </div>
     </div>
 

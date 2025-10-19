@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (pathname.includes('index.html') || pathname === '/' || pathname.endsWith('/workspace/') || pathname.endsWith('/')) {
         console.log('Loading home page...');
         await loadHomePage();
+        await loadHomeLayout();
     } else if (pathname.includes('products.html')) {
         console.log('Loading products page...');
         loadProductsPage();
@@ -525,10 +526,159 @@ async function loadHomePage() {
     while (!database) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
-    loadCategories();
-    loadFeaturedProducts();
 }
+
+// New home layout: sidebar categories + products grid
+async function loadHomeLayout() {
+    // Wait for database
+    while (!database) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    renderHomeCategories();
+    renderHomeProducts(database.products);
+}
+
+function renderHomeCategories() {
+    const listEl = document.getElementById('homeCategoriesList');
+    if (!listEl || !database) return;
+
+    // Build hierarchical list: main categories with subcategories nested
+    const mainCategories = database.categories.filter(c => c.parent_id === null);
+    const subByParent = database.categories.reduce((acc, c) => {
+        if (c.parent_id) {
+            if (!acc[c.parent_id]) acc[c.parent_id] = [];
+            acc[c.parent_id].push(c);
+        }
+        return acc;
+    }, {});
+
+    const html = mainCategories.map(mc => {
+        const subs = subByParent[mc.id] || [];
+        const subHtml = subs.map(sc => `
+            <li class="subcategory-item">
+                <a href="#" onclick="return filterHomeByCategory(${sc.id});">${sc.name}</a>
+            </li>
+        `).join('');
+        return `
+            <li class="category-item">
+                <a href="#" onclick="return filterHomeByCategory(${mc.id});">${mc.name}</a>
+                ${subs.length ? `<ul class="subcategory-list">${subHtml}</ul>` : ''}
+            </li>
+        `;
+    }).join('');
+
+    listEl.innerHTML = `<li class="category-item"><a href="#" onclick="return showAllHomeProducts();">Tất cả sản phẩm</a></li>` + html;
+}
+
+function renderHomeProducts(products) {
+    const container = document.getElementById('homeProductsContainer');
+    const empty = document.getElementById('homeNoProducts');
+    if (!container) return;
+
+    if (!products || products.length === 0) {
+        container.innerHTML = '';
+        if (empty) empty.classList.remove('hidden');
+        return;
+    }
+
+    if (empty) empty.classList.add('hidden');
+
+    container.innerHTML = products.map(product => {
+        const variant = database.product_variants.find(v => v.product_id === product.id);
+        const price = variant ? formatPrice(variant.price) : 'Liên hệ';
+        return `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p>${product.detail.substring(0, 100)}...</p>
+                    <div class="product-price">${price}</div>
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Home filters
+function filterHomeByCategory(categoryId) {
+    if (!database) return false;
+
+    // Match either main category or subcategories
+    const isMain = database.categories.some(c => c.id === categoryId && c.parent_id === null);
+    let ids = [categoryId];
+    if (isMain) {
+        const subs = database.categories.filter(c => c.parent_id === categoryId).map(c => c.id);
+        ids = ids.concat(subs);
+    }
+
+    const products = database.products.filter(p => ids.includes(p.cate_id));
+    renderHomeProducts(products);
+    return false;
+}
+
+function showAllHomeProducts() {
+    renderHomeProducts(database.products);
+    return false;
+}
+
+// Categories popup
+function openCategoriesPopup() {
+    // Create modal on-the-fly if missing (for non-home pages)
+    let modal = document.getElementById('categoriesModal');
+    let content = document.getElementById('categoriesModalContent');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'categoriesModal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content large-modal">
+                <span class="close" onclick="closeModal('categoriesModal')">&times;</span>
+                <h2>Danh mục sản phẩm</h2>
+                <div id="categoriesModalContent" class="categories-modal-grid"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        content = document.getElementById('categoriesModalContent');
+    }
+
+    if (!database) return;
+
+    // Build grid of categories
+    const mainCategories = database.categories.filter(c => c.parent_id === null);
+    const isHome = window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/workspace/') || window.location.pathname.endsWith('/');
+
+    content.innerHTML = mainCategories.map(mc => {
+        const subs = database.categories.filter(c => c.parent_id === mc.id);
+        const allLink = isHome
+            ? `<a href="#" onclick="filterHomeByCategory(${mc.id}); closeModal('categoriesModal'); return false;" class="chip chip-primary">Tất cả</a>`
+            : `<a href="products.html?category=${mc.id}" class="chip chip-primary">Tất cả</a>`;
+        const subsLinks = subs.map(s => (
+            isHome
+                ? `<a href="#" onclick=\"filterHomeByCategory(${s.id}); closeModal('categoriesModal'); return false;\" class=\"chip\">${s.name}</a>`
+                : `<a href=\"products.html?category=${s.id}\" class=\"chip\">${s.name}</a>`
+        )).join('');
+        return `
+            <div class="category-group">
+                <h4>${mc.name}</h4>
+                <div class="category-chips">
+                    ${allLink}
+                    ${subsLinks}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    modal.style.display = 'block';
+}
+
+// Expose functions
+window.openCategoriesPopup = openCategoriesPopup;
+window.filterHomeByCategory = filterHomeByCategory;
+window.showAllHomeProducts = showAllHomeProducts;
 
 function loadCategories() {
     const categoriesGrid = document.getElementById('categoriesGrid');
@@ -792,7 +942,7 @@ function showThankYouPage() {
             <i class="fas fa-check-circle" style="font-size: 80px; color: #28a745; margin-bottom: 20px;"></i>
             <h2 style="color: #333; margin-bottom: 20px;">Cảm ơn bạn đã mua hàng!</h2>
             <p style="color: #666; margin-bottom: 30px;">Đơn hàng của bạn đã được tiếp nhận và đang được xử lý.</p>
-            <button onclick="window.location.href='index.html'" style="background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer;">
+            <button onclick="window.location.href='index.html'" style="background: #007BFF; color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer;">
                 Tiếp tục mua sắm
             </button>
         </div>

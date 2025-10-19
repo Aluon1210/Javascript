@@ -272,7 +272,7 @@ function proceedToCheckout() {
 
 function showSuccessPage(order) {
     document.body.innerHTML = `
-        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem;">
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #007BFF; padding: 2rem;">
             <div style="background: white; padding: 3rem; border-radius: 20px; text-align: center; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
                 <div style="font-size: 4rem; color: #28a745; margin-bottom: 2rem;">
                     <i class="fas fa-check-circle"></i>
@@ -286,7 +286,7 @@ function showSuccessPage(order) {
                     <p><strong>Trạng thái:</strong> Chờ xử lý</p>
                 </div>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="window.location.href='index.html'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 25px; cursor: pointer; font-size: 1rem;">
+                    <button onclick="window.location.href='index.html'" style="background: #007BFF; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; cursor: pointer; font-size: 1rem;">
                         <i class="fas fa-home"></i> Về trang chủ
                     </button>
                     <button onclick="window.location.href='profile.html'" style="background: #28a745; color: white; border: none; padding: 1rem 2rem; border-radius: 25px; cursor: pointer; font-size: 1rem;">
