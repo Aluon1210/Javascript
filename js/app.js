@@ -552,9 +552,9 @@ function loadFeaturedProducts() {
         return;
     }
     
-    // Get first 6 products as featured
-    const products = database.products.slice(0, 6);
-    console.log('Loading featured products:', products.length);
+    // Show all products on homepage
+    const products = database.products;
+    console.log('Loading all products for home page:', products.length);
     
     featuredProducts.innerHTML = products.map(product => {
         const variant = database.product_variants.find(v => v.product_id === product.id);
