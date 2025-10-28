@@ -19,7 +19,7 @@
                     <ul>
                         <li><a href="index.html">Trang chủ</a></li>
                         <li><a href="products.html">Sản phẩm</a></li>
-                        <li><a href="categories.html">Danh mục</a></li>
+                        
                         <li><a href="contact.html">Liên hệ</a></li>
                     </ul>
                 </nav>
@@ -47,22 +47,22 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
+    <!-- Home Layout: Sidebar categories (left) + Products (right) -->
     <section class="categories-section">
         <div class="container">
-            <h2>Danh mục sản phẩm</h2>
-            <div class="categories-grid" id="categoriesGrid">
-                <!-- Categories will be loaded here -->
-            </div>
-        </div>
-    </section>
+            <div class="categories-layout">
+                <aside class="categories-sidebar">
+                    <div class="sidebar-header"><i class="fas fa-list"></i> Danh mục</div>
+                    <ul id="homeCategoryList" class="category-list"></ul>
+                </aside>
 
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>Sản phẩm nổi bật</h2>
-            <div class="products-grid" id="featuredProducts">
-                <!-- Featured products will be loaded here -->
+                <div class="products-area">
+                    <div class="products-header">
+                        <h2 id="homePageTitle">Tất cả sản phẩm</h2>
+                        <div class="products-count"><span id="homeProductsCount">0</span> sản phẩm</div>
+                    </div>
+                    <div class="products-grid" id="homeProducts"></div>
+                </div>
             </div>
         </div>
     </section>

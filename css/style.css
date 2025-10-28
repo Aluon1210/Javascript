@@ -1,3 +1,8 @@
+:root {
+    --primary: #007bff;
+    --primary-dark: #0056b3;
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
 /* Reset và Base Styles */
 * {
     margin: 0;
@@ -24,7 +29,7 @@ body {
 
 /* Header Styles */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient);
     color: white;
     padding: 1rem 0;
     position: sticky;
@@ -84,7 +89,7 @@ body {
 }
 
 .search-box button {
-    background: #667eea;
+    background: var(--primary);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -239,7 +244,7 @@ body {
 
 .add-to-cart-btn {
     width: 100%;
-    background: #667eea;
+    background: var(--gradient);
     color: white;
     border: none;
     padding: 0.8rem;
@@ -250,7 +255,7 @@ body {
 }
 
 .add-to-cart-btn:hover {
-    background: #5a6fd8;
+    filter: brightness(0.95);
 }
 
 /* Footer */
@@ -411,7 +416,7 @@ body {
 }
 
 .cart-item-controls button {
-    background: #667eea;
+    background: var(--primary);
     color: white;
     border: none;
     width: 30px;
@@ -586,7 +591,7 @@ body {
 }
 
 .breadcrumb a {
-    color: #667eea;
+    color: var(--primary);
     text-decoration: none;
 }
 
@@ -618,7 +623,7 @@ body {
 }
 
 .main-category {
-    border: 2px solid #667eea;
+    border: 2px solid var(--primary);
 }
 
 .sub-category {
@@ -630,7 +635,7 @@ body {
 }
 
 .parent-category {
-    color: #667eea;
+    color: var(--primary);
     font-size: 0.9rem;
     margin: 0.5rem 0;
 }
@@ -717,7 +722,7 @@ body {
     padding: 0.5rem 1rem;
     border: 1px solid #dee2e6;
     background: white;
-    color: #667eea;
+    color: var(--primary);
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
@@ -725,14 +730,14 @@ body {
 }
 
 .pagination-btn:hover {
-    background: #667eea;
+    background: var(--primary);
     color: white;
 }
 
 .pagination-btn.active {
-    background: #667eea;
+    background: var(--gradient);
     color: white;
-    border-color: #667eea;
+    border-color: var(--primary);
 }
 
 .pagination-dots {
@@ -783,7 +788,7 @@ body {
 .contact-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -840,11 +845,11 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--primary);
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient);
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -860,6 +865,75 @@ body {
 
 .submit-btn:hover {
     transform: translateY(-2px);
+}
+
+/* Categories page: sidebar + products layout */
+.categories-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+.categories-sidebar {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+}
+
+.sidebar-header {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.category-item:hover {
+    border-color: var(--primary);
+}
+
+.category-item.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.category-item.child {
+    padding-left: 1.2rem;
+}
+
+.products-area .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+@media (max-width: 992px) {
+    .categories-layout {
+        grid-template-columns: 1fr;
+    }
+    .categories-sidebar {
+        position: static;
+        top: auto;
+    }
 }
 
 .map-section {
